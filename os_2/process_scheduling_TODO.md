@@ -1,3 +1,40 @@
+
+
+# API
+
+## API for PCB
+
+- [ ] deconstructor
+- [x] constructor
+- [x] get information of PCB
+- [x] void status_change
+- [ ] bool cpu_time_change[status_examine()]
+
+## API helper for PCB
+
+- [ ] bool status_examine(): only if status is ready, can change the cpu_time
+
+***
+
+## API for PCB_queue
+
+- [ ] deconstructor
+- [x] constructor
+- [ ] print_all_info(): the format should follow the example
+- [ ] insert(): insert to the queue while keeping the sequence of priority
+- [ ] PSA: priority scheduling algorithm
+- [ ] end_detect(): when all processes are done, stop and break
+
+## API helper for PCB queue
+
+- [ ] 
+
+***
+
+
+
+
+
 ## 2021-12-5
 
 - [x] overview of the whole procedure
@@ -23,3 +60,10 @@ language : C++
 >
 > MLFQ may need a specific design
 
+## 2021-12-06
+
+###  Done
+
+1. the basic framework of the PSA_PCB_queue and PSA_PCB_block
+2. getting information of PCB
+3. framework of two classes PCB and PCB queue
