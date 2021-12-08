@@ -12,7 +12,8 @@
 
 ## API helper for PCB
 
-- [ ] bool status_examine(): only if status is ready, can change the cpu_time
+- [x] bool status_examine(): only if status is ready, can change the cpu_time
+- [ ] bool execute(): the PCB is executing and the process will update changed information and status
 
 ***
 
