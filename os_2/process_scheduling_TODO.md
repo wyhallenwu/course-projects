@@ -8,7 +8,7 @@
 - [x] constructor
 - [x] get information of PCB
 - [x] void status_change
-- [ ] bool cpu_time_change[status_examine()]
+- [x] bool cpu_time_change[status_examine()]
 
 ## API helper for PCB
 
@@ -21,8 +21,8 @@
 
 - [ ] deconstructor
 - [x] constructor
-- [ ] print_all_info(): the format should follow the example
-- [ ] insert(): insert to the queue while keeping the sequence of priority
+- [x] print_all_info(): the format should follow the example
+- [x] insert(): insert to the queue while keeping the sequence of priority
 - [ ] PSA: priority scheduling algorithm
 - [ ] end_detect(): when all processes are done, stop and break
 

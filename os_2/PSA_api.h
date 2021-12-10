@@ -41,9 +41,10 @@ public:
     void print_all_info() const;
 
     // insert a PCB into the queue while keeping the priority sequence(head_large -> rear_tiny).
-    void insert();
+    void insert(PCB *&pcb_);
 
-    //**************************************************************************
+    //*****************PCB queue API helper*****************
+    void print_single_info(PCB *&pcb) const;
 };
 
 //status enumeration
@@ -103,14 +104,14 @@ public:
     //*********************************************************
 
     //========================== API ==========================
-    bool execute(int time_clip_); // TODO
+    bool execute(int time_clip_ = 2); // TODO
 
     //*********************************************************
 
     //========================= API helper ====================
     void status_change(status status_);
-    status cpu_time_change(int time_clip);
+    status cpu_time_change(int time_clip = 2);
     bool exec_permission();
+    bool priority_change(int reduce = 3);
 };
-
 #endif
