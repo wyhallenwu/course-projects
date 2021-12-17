@@ -6,5 +6,9 @@ Also I strongly recommend you trying the project attached to the MIT course -- X
 
 All codes are written through VScode.
 
-
 I try not to use STL in this project, because I haven't write basic data structure for a long time. It's a good to help me review these techniques.
+
+2021-12-17
+
+- [ ] finish processor management algorithms
+- [ ] fully test
