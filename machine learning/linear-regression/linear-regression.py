@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+from mymodule import get_exec_time
 
 # dataloader: extract data from dataset
 def loadData(filename):
@@ -53,17 +54,6 @@ def step_gradient_descent(current_m, current_b, learning_rate, x, y):
     step_m = current_m - (learning_rate * m_gradient)
     step_b = current_b - (learning_rate * b_gradient)
     return step_m, step_b
-
-# a decorator to count time
-def get_exec_time(fn):
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        fn(*args, **kwargs)
-        end = time.time()
-        print("consuming time: {}s".format(end - start))
-        # return fn(*args, **kwargs)  if add this, it will execute two times
-    return wrapper
-
 
 # the training pipeline of linear regression
 @get_exec_time
