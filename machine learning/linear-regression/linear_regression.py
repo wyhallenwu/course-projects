@@ -1,6 +1,6 @@
+import time
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 from mymodule import get_exec_time
 
 # dataloader: extract data from dataset
@@ -71,5 +71,5 @@ def gradient_run(filename):
 
 if __name__ == '__main__':
     # dataPlot('linear-regression/dataset.txt')
-    gradient_run('linear-regression/dataset.txt')
+    gradient_run('machine learning/linear-regression/dataset.txt')
      
