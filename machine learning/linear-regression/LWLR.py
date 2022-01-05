@@ -4,17 +4,17 @@ import matplotlib.pyplot as plt
 
 def loadDataSet(fileName):
     f = open('machine learning/linear-regression/dataset.txt')
-    numFeatures = len(f.readline().split('\t')) - 1         # 除去y那一列，即是特征的数量
+    numFeatures = len(f.readline().split('\t')) - 1
     xArr = []
     yArr = []
     fr = open('machine learning/linear-regression/dataset.txt')
     for line in fr.readlines():
-        xLine = []  # 由于x有多个特征{x0,x1}，读取每一行后都先初始化并重新保存当前样本行的
-        curline = line.strip().split('\t')  # 当前读取的行，根据空格分割.strip()可以移除首尾的'\t' '\n'
+        xLine = []
+        curline = line.strip().split('\t')
         for i in range(numFeatures):
-            xLine.append(float(curline[i]))    # 保存当前样本行的x0 x1;注意需要将string格式转化为float形
+            xLine.append(float(curline[i]))
         xArr.append(xLine)
-        yArr.append(float(curline[-1]))    # y的值是每行最后一个；需要将string格式转化为float形
+        yArr.append(float(curline[-1]))
     f.close()
     fr.close()
     return xArr,yArr
