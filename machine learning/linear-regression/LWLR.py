@@ -30,12 +30,12 @@ def lwlr(xTest,xArr,yArr,k = 0.1):
 
         w = np.mat(np.eye((n)))           # weight matrix
 
-        # 计算该点的权重矩阵
+        # compute weight matrix for single point
         for i in range(n):
             difMat = xTest[point,:] - xMat[i,:]
             w[i,i] = np.exp(difMat * difMat.T / (-2 * k * k))
 
-        # 计算最优的参数theta
+        # compute theta for the point
         xTwx = xMat.T * (w * xMat)
         if np.linalg.det(xTwx) == 0:
             print('sigular matrix cant get inverse')
