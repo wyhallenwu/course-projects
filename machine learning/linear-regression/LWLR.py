@@ -15,6 +15,8 @@ def loadDataSet(fileName):
             xLine.append(float(curline[i]))    # 保存当前样本行的x0 x1;注意需要将string格式转化为float形
         xArr.append(xLine)
         yArr.append(float(curline[-1]))    # y的值是每行最后一个；需要将string格式转化为float形
+    f.close()
+    fr.close()
     return xArr,yArr
 
 
