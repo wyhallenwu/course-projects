@@ -2,7 +2,7 @@
 
 ## database design
 ### ER graph
-![er](/course-projects/database/er.jpg)
+![er](./er.jpg)
 
 ### detailed attributes  
 1. Customer:  
