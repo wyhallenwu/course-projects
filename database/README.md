@@ -6,46 +6,49 @@
 
 ### detailed attributes  
 1. Customer:  
-- id
-- name
-- property
-- discount rate
-- connect person
-- connect information
-2. Car
-- plate number
-- car type(small, middle, large)
-- color
-- car property(sedan, SUV, coupe, pickup, truck)
-3. Service agent
-- id
-- name
-- connect information
-- gender
-4. Order
-- id
-- settlement method
-- start repairing time
-- expected finish time
-- detailed description
-- repair type
-- repair property
-- order time
-5. Single item
-- id
-- name
-- consuming time
-- unit price
-6. Repair list
+- customer_id int(5)
+- name nvarchar(20)
+- property int(1)
+- discount rate float
+- phone nvarchar(11)
+2. Company
+- customer_id int(5)
+- company_name nvarchar(20)
+- company_phone nvarchar(11)
+3. Car
+- customer_id int(5)
+- plate_number nvarchar(10)
+- car_type(small, middle, large) int(1)
+- color nvarchar(5)
+- car_property(sedan, SUV, coupe, pickup, truck) nvarchar(10)
+4. Service agent
+- agent_id int(5)
+- name nvarchar(10)
+- phone nvarchar(11)
+- gender boolen
+5. Contract
+- contract_id int(10)
+- settlement method int(1)
+- start_repairing_time date
+- expected_finish_time date
+- description text
+- repair_type 
+- repair_property
+- contract_time datetime
+6. Commodity
+- commodity_id int(5)
+- name nvarchar(20)
+- price float
+7. Repair list
 - id
 - time
-7. Garageman
+8. Garageman
 - id
 - name
 - connect information
 - gender
-- type of work
-8. Parts
+- type of work 
+9. Parts
 - id
 - name
 - price
