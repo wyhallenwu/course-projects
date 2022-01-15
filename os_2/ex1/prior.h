@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-// #include<stdlib.h>
 
 enum status {kReady, kRunning, kFinished};
 struct PCB {
@@ -13,21 +12,24 @@ struct PCB {
     int remaining_time;
     int exec_count;
 
-    PCB() : current_status(kReady), exec_count(0) {
-        unsigned seed = time(0);
-        srand(seed);
+    PCB() {
         all_time = rand() % 6 + 1;
-        priority = rand() % 4 + 1;
+        priority = rand() % 10 + 1;
         remaining_time = all_time;
+        current_status = kReady;
+        exec_count = 0;
     }
 
     void show_info() {
         std::cout << "current_status: " << current_status
+            << "| priority: " << priority
             << "| remaining_time: " << remaining_time
             << "| exec_count: " << exec_count
             << "| all_time: " << all_time << std::endl;
     }
+
 };
+
 
 
 #endif
