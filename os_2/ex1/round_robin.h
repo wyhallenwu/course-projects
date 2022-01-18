@@ -7,26 +7,26 @@ using namespace std;
 enum status { kRunning, kReady, kFinished };
 
 struct PCB {
-  int remaining_time;
-  int all_time;
-  status current_status;
+  int _remaining_time;
+  int _all_time;
+  status _current_status;
   PCB() {
     srand(unsigned(time(NULL)));
-    all_time = rand() % 6 + 1;
-    remaining_time = all_time;
-    current_status = kReady;
+    _all_time = rand() % 6 + 1;
+    _remaining_time = _all_time;
+    _current_status = kReady;
     sleep(1);
   }
   void show_info() {
-    std::cout << "current_status: " << current_status
-              << "| remaining_time: " << remaining_time
-              << "| all_time: " << all_time << std::endl;
+    std::cout << "current_status: " << _current_status
+              << "| remaining_time: " << _remaining_time
+              << "| all_time: " << _all_time << std::endl;
   }
 };
 
 class RoundRobin {
  public:
-  RoundRobin(int set_capacity) : capacity(set_capacity) {
+  RoundRobin(int set_capacity) : _capacity(set_capacity) {
     schedule_queue = vector<PCB>(set_capacity);
   }
 
@@ -52,15 +52,15 @@ class RoundRobin {
     for (; i < schedule_queue.size(); i++) {
       schedule_queue[i - 1] = schedule_queue[i];
     }
-    temp.current_status = kReady;
+    temp._current_status = kReady;
     schedule_queue[i - 1] = temp;
   }
 
   void process_exec() {
     PCB &front = get_front();
-    if (front.current_status == kReady) front.current_status = kRunning;
-    front.remaining_time -= 1;
-    if (front.remaining_time == 0) {
+    if (front._current_status == kReady) front._current_status = kRunning;
+    front._remaining_time -= 1;
+    if (front._remaining_time == 0) {
       schedule_queue.erase(begin(schedule_queue));
       return;
     }
@@ -69,7 +69,7 @@ class RoundRobin {
 
  private:
   vector<PCB> schedule_queue;
-  int capacity;
+  int _capacity;
 };
 
 void test_pipeline() {
