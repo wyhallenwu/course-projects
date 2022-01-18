@@ -1,4 +1,4 @@
-#include "prior.h"
+#include "round_robin.h"
 
 int main() {
   test_pipeline();
