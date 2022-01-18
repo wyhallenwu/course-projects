@@ -4,11 +4,8 @@ This project is about course "operating system(2)" at Shanghai University.  My r
 
 Also I strongly recommend you trying the project attached to the MIT course -- XV6.
 
-All codes are written through VScode.
+All codes are written through VScode and will have a simple test. I prefer Google open source C++ format style.
 
-I try not to use STL in this project, because I haven't write basic data structure for a long time. It's a good to help me review these techniques.
-
-2021-12-17
-
-- [ ] finish processor management algorithms
-- [ ] fully test
+## Timeline
+- [x] experiment 1 (2022-01-18)
+- [ ] experiment 2 (TODO)
