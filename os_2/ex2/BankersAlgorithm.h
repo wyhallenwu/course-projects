@@ -87,9 +87,9 @@ class BankersAlgorithm {
     }
   }
 
-  bool isMeet(Process& process) {
+  bool isMeet(Process& process, vector<int>& available) {
     for (int i = 0; i < process._need.size(); i++) {
-      if (process._need[i] > _available[i]) return false;
+      if (process._need[i] > available[i]) return false;
     }
     return true;
   }
@@ -98,20 +98,21 @@ class BankersAlgorithm {
     if (!examine_basic(consume, _process_list[index])) return false;
     deque<bool> finished(_process_list.size(), false);
     finished[index] = true;
+    vector<int> available_temp;
+    // TODO: debug
     for (int i = 0; i < _process_list.size(); i++) {
       _available[i] -= _process_list[index]._need[i];
     }
-    vector<int> available_temp = _available;
     return ba_help(finished, available_temp);
   }
 
   bool ba_help(deque<bool>& finished, vector<int>& available_temp) {
     if (isFinished(finished)) return true;
     for (int i = 0; i < _process_list.size() && finished[i] == false; i++) {
-      if (isMeet(_process_list[i])) {
+      if (isMeet(_process_list[i], available_temp)) {
         vector<int> request = _process_list[i]._need;
         compute(available_temp, _process_list[i]._need);
-        finished[i] == true;
+        finished[i] = true;
         if (!ba_help(finished, available_temp)) {
           refine(request);
           return false;
@@ -119,10 +120,6 @@ class BankersAlgorithm {
           return true;
       }
     }
-    if (isFinished(finished))
-      return true;
-    else
-      return false;
   }
 
   void pipeline(vector<int> consume, int index) {
