@@ -9,7 +9,6 @@ int main() {
   Process p1(p1_need, max);
   Process p2(p2_need, max);
   Process p3(p3_need, max);
-  cout << p1;
 
   vector<int> available{3, 5, 2};
   vector<int> allcation{0, 0, 0};

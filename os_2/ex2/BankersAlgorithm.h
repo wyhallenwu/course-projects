@@ -81,15 +81,15 @@ class BankersAlgorithm {
     }
   }
 
-  void refine(vector<int> request) {
-    for (int i = 0; i < _available.size(); i++) {
-      _available[i] -= request[i];
+  void refine(vector<int>& availabel_temp, const vector<int>& request) {
+    for (int i = 0; i < availabel_temp.size(); i++) {
+      availabel_temp[i] -= request[i];
     }
   }
 
-  bool isMeet(Process& process, vector<int>& available) {
-    for (int i = 0; i < process._need.size(); i++) {
-      if (process._need[i] > available[i]) return false;
+  bool isMeet(const vector<int>& need, const vector<int>& available) {
+    for (int i = 0; i < need.size(); i++) {
+      if (need[i] > available[i]) return false;
     }
     return true;
   }
@@ -98,28 +98,40 @@ class BankersAlgorithm {
     if (!examine_basic(consume, _process_list[index])) return false;
     deque<bool> finished(_process_list.size(), false);
     finished[index] = true;
-    vector<int> available_temp;
-    // TODO: debug
-    for (int i = 0; i < _process_list.size(); i++) {
-      _available[i] -= _process_list[index]._need[i];
+    for (int i = 0; i < _available.size(); i++) {
+      _available[i] -= consume[i];
     }
-    return ba_help(finished, available_temp);
+    vector<int> available_temp = _available;
+    bool flag = false;
+    //
+    for (int i = 0; i < available_temp.size(); i++)
+      cout << available_temp[i] << " ";
+    cout << endl;
+    //
+    ba_help(finished, available_temp, index, flag);
+
+    return flag;
   }
 
-  bool ba_help(deque<bool>& finished, vector<int>& available_temp) {
-    if (isFinished(finished)) return true;
+  void ba_help(deque<bool>& finished, vector<int>& available_temp, int current,
+               bool& flag) {
+    if (isFinished(finished)) {
+      flag = true;
+      return;
+    }
     for (int i = 0; i < _process_list.size() && finished[i] == false; i++) {
-      if (isMeet(_process_list[i], available_temp)) {
-        vector<int> request = _process_list[i]._need;
+      if (isMeet(_process_list[i]._need, available_temp)) {
         compute(available_temp, _process_list[i]._need);
         finished[i] = true;
-        if (!ba_help(finished, available_temp)) {
-          refine(request);
-          return false;
-        } else
-          return true;
+        //
+        for (int j = 0; j < available_temp.size(); j++)
+          cout << available_temp[j] << " ";
+        cout << endl;
+        //
+        ba_help(finished, available_temp, i, flag);
       }
     }
+    refine(available_temp, _process_list[current]._need);
   }
 
   void pipeline(vector<int> consume, int index) {
