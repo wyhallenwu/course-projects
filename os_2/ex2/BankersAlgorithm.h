@@ -119,15 +119,11 @@ class BankersAlgorithm {
       flag = true;
       return;
     }
-    for (int i = 0; i < _process_list.size() && finished[i] == false; i++) {
-      if (isMeet(_process_list[i]._need, available_temp)) {
+    for (int i = 0; i < _process_list.size(); i++) {
+      if (finished[i] == false &&
+          isMeet(_process_list[i]._need, available_temp)) {
         compute(available_temp, _process_list[i]._need);
         finished[i] = true;
-        //
-        for (int j = 0; j < available_temp.size(); j++)
-          cout << available_temp[j] << " ";
-        cout << endl;
-        //
         ba_help(finished, available_temp, i, flag);
       }
     }
