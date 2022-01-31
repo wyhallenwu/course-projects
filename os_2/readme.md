@@ -9,4 +9,5 @@ All codes are written through VScode and will have a simple test. I prefer Googl
 ## Timeline
 - [x] experiment 1 (2022-01-18)
 - [x] experiment 2 (2022-01-20)
-- [ ] experiment 3(TODO)
+- [x] experiment 3(2022-01-31)
+- [ ] experiment 4(TODO)
