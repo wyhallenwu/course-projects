@@ -11,6 +11,7 @@ int main() {
 
   Lru lru(3);
   for (int i = 0; i < l.getseq().size(); i++) {
+    cout << "current " << i << endl;
     lru.pipeline(l.getseq()[i]);
   }
   cout << "END" << endl;
