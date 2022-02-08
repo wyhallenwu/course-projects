@@ -1,3 +1,3 @@
-module ftp_server
+module my_ftp
 
 go 1.17

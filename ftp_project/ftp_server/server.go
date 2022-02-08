@@ -1,40 +1,74 @@
-package main
+package my_ftp
 
 import (
 	"fmt"
 	"net"
 )
 
-func main() {
-	listener, err := net.Listen("tcp", "192.168.0.51:21")
+const proxy_addr string = ""
+
+func Listen() bool {
+	listener, err := net.Listen("tcp", fmt.Sprintf("%s:21", proxy_addr))
 	if err != nil {
 		fmt.Printf("listening false. Fault: %v \n", err)
-		return
+		return false
 	}
-
-	defer listener.Close()
-
 	fmt.Println("waiting for client connection...")
 
 	conn, err := listener.Accept()
-	fmt.Println("blocking after accepted.")
 	if err != nil {
 		fmt.Printf("listening false. Fault: %v \n", err)
-		return
+		return false
 	}
-	defer conn.Close()
+	fmt.Println("connection from ", conn.RemoteAddr())
+	// fmt.Println("connected.")
 
-	fmt.Println("connected.")
+	for {
+		buf := make([]byte, 1024)
+		n, err := conn.Read(buf)
+		if err != nil {
+			fmt.Printf("listening false. Fault: %v \n", err)
+			return false
+		}
+		if string(buf[:n]) == "tcp" {
+			conn.Write([]byte("successfully connected."))
+		}
+		fmt.Println("read message: ", string(buf[:n]))
+		if string(buf[:n]) == "quit" {
+			conn.Close()
+			listener.Close()
+			break
+		}
+	}
+	return true
+}
 
-	buf := make([]byte, 1024)
-	n, err := conn.Read(buf)
+// 获取可用端口
+func GetAvailablePort() (int, error) {
+	address, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:0", "0.0.0.0"))
 	if err != nil {
-		fmt.Printf("listening false. Fault: %v \n", err)
-		return
+		return 0, err
 	}
 
-	if string(buf[:n]) == "are you ready" {
-		conn.Write([]byte("i am ready"))
+	listener, err := net.ListenTCP("tcp", address)
+	if err != nil {
+		return 0, err
 	}
-	fmt.Println("read message: ", string(buf[:n]))
+
+	defer listener.Close()
+	return listener.Addr().(*net.TCPAddr).Port, nil
+
+}
+
+// 判断端口是否可以（未被占用）
+func IsPortAvailable(port int) bool {
+	address := fmt.Sprintf("%s:%d", "0.0.0.0", port)
+	listener, err := net.Listen("tcp", address)
+	if err != nil {
+		fmt.Printf("port %s is taken: %s", address, err)
+		return false
+	}
+
+	defer listener.Close()
+	return true
 }
