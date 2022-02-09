@@ -1,32 +1,59 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net"
+	"os"
+	"strings"
 )
 
 func main() {
-	fmt.Println("start dialing...")
-	conn, err := net.Dial("tcp", "124.70.142.89:21")
+	conn, err := ConnectProxy()
 	if err != nil {
-		fmt.Println("net.Dial err: ", err)
-		return
+		fmt.Println("connect proxy successfully.")
 	}
-	defer conn.Close()
+	SendCommand(conn)
+	conn.Close()
+}
 
-	fmt.Println("start writing...")
-	_, err = conn.Write([]byte("are you ready"))
+func ConnectProxy() (*net.TCPConn, error) {
+	tcpAddr, err := net.ResolveTCPAddr("tcp", "124.70.142.89:10000")
 	if err != nil {
-		fmt.Println("conn.Write err: ", err)
-		return
+		fmt.Println("error is: ", err)
+	}
+	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	if err != nil {
+		fmt.Println("error is: ", err)
+	}
+	fmt.Println("connected!")
+	return conn, err
+}
+
+func SendCommand(conn *net.TCPConn) {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Println("MyTelnet> ")
+		cmdString, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+		cmdString = strings.TrimSuffix(cmdString, "\n")
+		fmt.Println("execute: ", cmdString)
+		if cmdString == "qtelnet" {
+			fmt.Println("quit MyTelnet")
+			break
+		}
+		conn.Write([]byte(cmdString))
+	}
+}
+
+func ReceiveMessage(conn *net.TCPConn) {
+	message := make([]byte, 4096)
+	n, err := conn.Read(message)
+	if err != nil {
+		fmt.Println("ReceiveMessage: ", err)
 	}
 
-	buf := make([]byte, 1024)
-	fmt.Println("start reading...")
-	n, err := conn.Read(buf)
-	if err != nil {
-		fmt.Println("conn.Read err: ", err)
-		return
-	}
-	fmt.Println("message from server: ", string(buf[:n]))
+	fmt.Println(string(message[:n]))
 }
