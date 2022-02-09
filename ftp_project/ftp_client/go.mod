@@ -1,3 +1,3 @@
-module ftp_main
+module ftp_client
 
 go 1.17

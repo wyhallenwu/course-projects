@@ -8,21 +8,8 @@ import (
 	"strings"
 )
 
-func main() {
-	conn, err := ConnectProxy()
-	if err != nil {
-		fmt.Println("connect proxy successfully.")
-	}
-	SendCommand(conn)
-	conn.Close()
-}
-
-func ConnectProxy() (*net.TCPConn, error) {
-	tcpAddr, err := net.ResolveTCPAddr("tcp", "124.70.142.89:10000")
-	if err != nil {
-		fmt.Println("error is: ", err)
-	}
-	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+func ConnectProxy() (net.Conn, error) {
+	conn, err := net.Dial("tcp", "192.168.124.37:10000")
 	if err != nil {
 		fmt.Println("error is: ", err)
 	}
@@ -30,7 +17,7 @@ func ConnectProxy() (*net.TCPConn, error) {
 	return conn, err
 }
 
-func SendCommand(conn *net.TCPConn) {
+func SendCommand(conn net.Conn) {
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Println("MyTelnet> ")
@@ -48,12 +35,21 @@ func SendCommand(conn *net.TCPConn) {
 	}
 }
 
-func ReceiveMessage(conn *net.TCPConn) {
+func ReceiveMessage(conn net.Conn) {
 	message := make([]byte, 4096)
 	n, err := conn.Read(message)
 	if err != nil {
 		fmt.Println("ReceiveMessage: ", err)
 	}
-
 	fmt.Println(string(message[:n]))
+}
+
+func main() {
+	conn, err := ConnectProxy()
+	if err != nil {
+		fmt.Println("connect proxy successfully.")
+	}
+	SendCommand(conn)
+	ReceiveMessage(conn)
+	conn.Close()
 }
