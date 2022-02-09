@@ -5,10 +5,10 @@ import (
 	"net"
 )
 
-const proxy_addr string = "192.168.124.37"
+const proxy_addr string = "192.168.31.233"
 
 func ConnectServer(ServerAddr string) net.Conn {
-	conn, err := net.Dial("tcp", ServerAddr)
+	conn, err := net.Dial("tcp", fmt.Sprintf("%s:10000", ServerAddr))
 	if err != nil {
 		fmt.Println("error is(server ConnectServer): ", err)
 	}
