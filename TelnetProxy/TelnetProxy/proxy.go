@@ -6,6 +6,7 @@ import (
 )
 
 const proxy_addr string = "58.199.162.167"
+const server_addr string = "124.70.142.89"
 
 func ConnectServer(ServerAddr string) net.Conn {
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:10000", ServerAddr))
@@ -47,7 +48,7 @@ func ResendCommand(serverConn net.Conn, command string) {
 }
 
 func ReceiveServer(serverConn net.Conn) string {
-	message := make([]byte, 1024)
+	message := make([]byte, 4096)
 	n, err := serverConn.Read(message)
 	if err != nil {
 		fmt.Println("error is(ReceiveServer): ", err)
@@ -59,23 +60,89 @@ func SendBack(message string, clientConn net.Conn) {
 	clientConn.Write([]byte(message))
 }
 
-func main() {
-	clientConn, clientListener := ConfirmConnection()
-	ServerAddr := "124.70.142.89"
-	serverConn := ConnectServer(ServerAddr)
-	for {
-		command := ReceiveCommand(clientConn, clientListener)
-		fmt.Println(command)
-		ResendCommand(serverConn, command)
-		result := ReceiveServer(serverConn)
-		if command == "quit telnet" {
-			clientConn.Close()
-			clientListener.Close()
-			serverConn.Close()
-			break
+func Vertify(username string, passwd string) bool {
+	userinfo := make(map[string]string)
+	userinfo["wuyuheng"] = "wuyuheng"
+	password, ok := userinfo[username]
+	if ok {
+		if passwd == password {
+			return true
 		}
-		fmt.Println(result)
-		SendBack(result, clientConn)
-		fmt.Println("end process")
+	}
+	return false
+}
+
+func Check(clientConn net.Conn) bool {
+	message := "Please input your username: "
+	clientConn.Write([]byte(message))
+	username_ := make([]byte, 1024)
+	namelen, _ := clientConn.Read(username_)
+	username := string(username_[:namelen])
+	message = "Please input your password: "
+	clientConn.Write([]byte(message))
+	password_ := make([]byte, 1024)
+	passlen, _ := clientConn.Read(password_)
+	password := string(password_[:passlen])
+	if Vertify(username, password) {
+		message = "success"
+		clientConn.Write([]byte(message))
+		return true
+	} else {
+		message = "false"
+		clientConn.Write([]byte(message))
+		return false
+	}
+
+}
+
+func GetServerAddr(clientConn net.Conn) string {
+	ServerAddr := make([]byte, 1024)
+	n, _ := clientConn.Read(ServerAddr)
+	if string(ServerAddr[:n]) != server_addr {
+		message := "false"
+		clientConn.Write([]byte(message))
+		return message
+	} else {
+		message := "success"
+		clientConn.Write([]byte(message))
+		return string(ServerAddr[:n])
+	}
+
+}
+
+func main() {
+	for {
+		clientConn, clientListener := ConfirmConnection()
+		success := Check(clientConn)
+		if !success {
+			message := "Wrong Try Again."
+			clientConn.Write([]byte(message))
+			clientListener.Close()
+			clientConn.Close()
+			continue
+		}
+		ServerAddr := GetServerAddr(clientConn)
+		if ServerAddr == "false" {
+			clientListener.Close()
+			clientConn.Close()
+			fmt.Println("try again")
+			continue
+		}
+		serverConn := ConnectServer(ServerAddr)
+		for {
+			command := ReceiveCommand(clientConn, clientListener)
+			fmt.Println(command)
+			ResendCommand(serverConn, command)
+			result := ReceiveServer(serverConn)
+			if command == "quit telnet" {
+				clientConn.Close()
+				clientListener.Close()
+				serverConn.Close()
+				break
+			}
+			fmt.Println(result)
+			SendBack(result, clientConn)
+			fmt.Println("end process")
+		}
 	}
 }

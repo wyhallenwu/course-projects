@@ -38,7 +38,7 @@ func CommandExec(cmdString string) string {
 	// return string(out_bytes)
 }
 
-func ConnectProxy() net.Conn {
+func ConnectProxy() (net.Conn, net.Listener) {
 	listener, err := net.Listen("tcp", "192.168.0.51:10000")
 	if err != nil {
 		fmt.Println("error is(ConnectProxy): ", err)
@@ -49,7 +49,7 @@ func ConnectProxy() net.Conn {
 	}
 
 	fmt.Println("connected!")
-	return conn
+	return conn, listener
 }
 
 func ReceiveCommandProxy(proxyConn net.Conn) string {
@@ -62,18 +62,21 @@ func ReceiveCommandProxy(proxyConn net.Conn) string {
 }
 
 func main() {
-	fmt.Println("waiting connection...")
-	proxyConn := ConnectProxy()
-	fmt.Println("connected...")
 	for {
-		command := ReceiveCommandProxy(proxyConn)
-		fmt.Println(command)
-		if command == "quit telnet" {
-			proxyConn.Close()
-			break
+		fmt.Println("waiting connection...")
+		proxyConn, proxyListener := ConnectProxy()
+		fmt.Println("connected...")
+		for {
+			command := ReceiveCommandProxy(proxyConn)
+			fmt.Println(command)
+			if command == "quit telnet" {
+				proxyListener.Close()
+				proxyConn.Close()
+				break
+			}
+			out := CommandExec(command)
+			proxyConn.Write([]byte(out))
 		}
-		out := CommandExec(command)
-		proxyConn.Write([]byte(out))
+		fmt.Println("end")
 	}
-	fmt.Println("end")
 }

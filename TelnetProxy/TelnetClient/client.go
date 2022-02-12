@@ -44,11 +44,54 @@ func ReceiveMessage(conn net.Conn) string {
 	return string(message[:n])
 }
 
-func main() {
-	conn, err := ConnectProxy()
-	if err != nil {
-		fmt.Println("error is(main): ", err)
+func Check(conn net.Conn) bool {
+	message := make([]byte, 1024)
+	conn.Read(message)
+	fmt.Println(string(message))
+	reader := bufio.NewReader(os.Stdin)
+	username, _ := reader.ReadString('\n')
+	username = strings.TrimSuffix(username, "\n")
+	conn.Write([]byte(username))
+	conn.Read(message)
+	fmt.Println(string(message))
+	reader2 := bufio.NewReader(os.Stdin)
+	password, _ := reader2.ReadString('\n')
+	password = strings.TrimSuffix(password, "\n")
+	conn.Write([]byte(password))
+
+	n, _ := conn.Read(message)
+	if string(message[:n]) == "success" {
+		fmt.Println("log in success!")
+		return true
+	} else {
+		conn.Close()
+		return false
 	}
+}
+
+func ServerAddr(conn net.Conn) bool {
+	fmt.Printf("Please input server address: ")
+	reader := bufio.NewReader(os.Stdin)
+	ServerAddr, _ := reader.ReadString('\n')
+	ServerAddr = strings.TrimSuffix(ServerAddr, "\n")
+	conn.Write([]byte(ServerAddr))
+
+	message := make([]byte, 1024)
+	n, _ := conn.Read(message)
+	return string(message[:n]) != "false"
+}
+
+func main() {
+	conn, _ := ConnectProxy()
+	if !Check(conn) {
+		fmt.Println("Wrong. Please try again.")
+		return
+	}
+	if !ServerAddr(conn) {
+		fmt.Println("Cannot connected.")
+		return
+	}
+	fmt.Println("connected ")
 	for {
 		flag := SendCommand(conn)
 		message := ReceiveMessage(conn)
@@ -58,4 +101,5 @@ func main() {
 		}
 		fmt.Printf("%s", message)
 	}
+
 }
