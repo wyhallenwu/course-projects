@@ -1,0 +1,300 @@
+100 : tensor(90.9366, device='cuda:0')
+200 : tensor(90.1786, device='cuda:0')
+test mse:  84.9143549601237
+300 : tensor(90.0678, device='cuda:0')
+400 : tensor(90.1474, device='cuda:0')
+test mse:  85.45073699951172
+500 : tensor(90.1635, device='cuda:0')
+600 : tensor(90.1452, device='cuda:0')
+test mse:  85.58914947509766
+700 : tensor(90.1160, device='cuda:0')
+800 : tensor(90.1376, device='cuda:0')
+test mse:  85.46001942952473
+900 : tensor(90.0844, device='cuda:0')
+1000 : tensor(89.2898, device='cuda:0')
+test mse:  85.11283111572266
+1100 : tensor(88.5467, device='cuda:0')
+1200 : tensor(88.2614, device='cuda:0')
+test mse:  84.46284484863281
+1300 : tensor(88.1956, device='cuda:0')
+1400 : tensor(88.0951, device='cuda:0')
+test mse:  84.35526021321614
+1500 : tensor(88.0858, device='cuda:0')
+1600 : tensor(88.0695, device='cuda:0')
+test mse:  84.44635772705078
+1700 : tensor(88.0593, device='cuda:0')
+1800 : tensor(88.0888, device='cuda:0')
+test mse:  84.48590342203777
+1900 : tensor(87.9913, device='cuda:0')
+2000 : tensor(88.0453, device='cuda:0')
+test mse:  84.34803517659505
+2100 : tensor(88.0337, device='cuda:0')
+2200 : tensor(88.0079, device='cuda:0')
+test mse:  84.38372294108073
+2300 : tensor(87.9742, device='cuda:0')
+2400 : tensor(87.9855, device='cuda:0')
+test mse:  84.34224955240886
+2500 : tensor(87.9619, device='cuda:0')
+2600 : tensor(87.5164, device='cuda:0')
+test mse:  84.06629943847656
+2700 : tensor(86.9506, device='cuda:0')
+2800 : tensor(87.0729, device='cuda:0')
+test mse:  83.82878112792969
+2900 : tensor(86.7813, device='cuda:0')
+3000 : tensor(86.4103, device='cuda:0')
+test mse:  83.25770568847656
+3100 : tensor(86.5322, device='cuda:0')
+3200 : tensor(86.4361, device='cuda:0')
+test mse:  82.96697489420573
+3300 : tensor(86.3549, device='cuda:0')
+3400 : tensor(86.4066, device='cuda:0')
+test mse:  82.83862050374348
+3500 : tensor(86.2496, device='cuda:0')
+3600 : tensor(86.3174, device='cuda:0')
+test mse:  82.69968922932942
+3700 : tensor(86.2820, device='cuda:0')
+3800 : tensor(86.3255, device='cuda:0')
+test mse:  82.55338033040364
+3900 : tensor(86.4295, device='cuda:0')
+4000 : tensor(86.2161, device='cuda:0')
+test mse:  82.59252421061198
+4100 : tensor(86.4281, device='cuda:0')
+4200 : tensor(86.1910, device='cuda:0')
+test mse:  82.550048828125
+4300 : tensor(86.3114, device='cuda:0')
+4400 : tensor(86.2310, device='cuda:0')
+test mse:  82.61042785644531
+4500 : tensor(86.2932, device='cuda:0')
+4600 : tensor(86.3509, device='cuda:0')
+test mse:  82.69357299804688
+4700 : tensor(86.1399, device='cuda:0')
+4800 : tensor(86.2553, device='cuda:0')
+test mse:  82.63182576497395
+4900 : tensor(86.2671, device='cuda:0')
+5000 : tensor(86.3749, device='cuda:0')
+test mse:  82.56079864501953
+5100 : tensor(86.2695, device='cuda:0')
+5200 : tensor(86.3375, device='cuda:0')
+test mse:  82.56463623046875
+5300 : tensor(86.2136, device='cuda:0')
+5400 : tensor(86.4322, device='cuda:0')
+test mse:  82.5337142944336
+5500 : tensor(86.1746, device='cuda:0')
+5600 : tensor(86.2171, device='cuda:0')
+test mse:  82.42807515462239
+5700 : tensor(86.1820, device='cuda:0')
+5800 : tensor(86.2402, device='cuda:0')
+test mse:  82.44007364908855
+5900 : tensor(86.2841, device='cuda:0')
+6000 : tensor(86.2352, device='cuda:0')
+test mse:  82.45113627115886
+6100 : tensor(86.2850, device='cuda:0')
+6200 : tensor(86.2853, device='cuda:0')
+test mse:  82.4651387532552
+6300 : tensor(86.3156, device='cuda:0')
+6400 : tensor(86.1812, device='cuda:0')
+test mse:  82.39790344238281
+6500 : tensor(86.2687, device='cuda:0')
+6600 : tensor(86.1148, device='cuda:0')
+test mse:  82.48116556803386
+6700 : tensor(86.2765, device='cuda:0')
+6800 : tensor(86.2423, device='cuda:0')
+test mse:  82.4430440266927
+6900 : tensor(86.2132, device='cuda:0')
+7000 : tensor(86.3384, device='cuda:0')
+test mse:  82.42166392008464
+7100 : tensor(86.1805, device='cuda:0')
+7200 : tensor(86.2441, device='cuda:0')
+test mse:  82.4720687866211
+7300 : tensor(86.1288, device='cuda:0')
+7400 : tensor(86.1950, device='cuda:0')
+test mse:  82.44663747151692
+7500 : tensor(86.2803, device='cuda:0')
+7600 : tensor(86.3086, device='cuda:0')
+test mse:  82.37887573242188
+7700 : tensor(86.3472, device='cuda:0')
+7800 : tensor(86.2901, device='cuda:0')
+test mse:  82.52186838785808
+7900 : tensor(86.3401, device='cuda:0')
+8000 : tensor(86.3070, device='cuda:0')
+test mse:  82.34089914957683
+8100 : tensor(86.2810, device='cuda:0')
+8200 : tensor(86.4037, device='cuda:0')
+test mse:  82.37559763590495
+8300 : tensor(86.3866, device='cuda:0')
+8400 : tensor(86.2120, device='cuda:0')
+test mse:  82.42046864827473
+8500 : tensor(86.3737, device='cuda:0')
+8600 : tensor(86.6412, device='cuda:0')
+test mse:  82.46876780192058
+8700 : tensor(86.4755, device='cuda:0')
+8800 : tensor(86.4619, device='cuda:0')
+test mse:  82.48226165771484
+8900 : tensor(86.4284, device='cuda:0')
+9000 : tensor(86.5182, device='cuda:0')
+test mse:  82.49860127766927
+9100 : tensor(86.3677, device='cuda:0')
+9200 : tensor(86.4270, device='cuda:0')
+test mse:  82.52417246500652
+9300 : tensor(86.5438, device='cuda:0')
+9400 : tensor(86.4643, device='cuda:0')
+test mse:  82.55761464436848
+9500 : tensor(86.2995, device='cuda:0')
+9600 : tensor(86.3585, device='cuda:0')
+test mse:  82.59859466552734
+9700 : tensor(85.5092, device='cuda:0')
+9800 : tensor(83.7186, device='cuda:0')
+test mse:  80.9267069498698
+9900 : tensor(81.8330, device='cuda:0')
+10000 : tensor(81.0829, device='cuda:0')
+test mse:  79.55988311767578
+10100 : tensor(80.7515, device='cuda:0')
+10200 : tensor(80.2335, device='cuda:0')
+test mse:  79.21420796712239
+10300 : tensor(80.1495, device='cuda:0')
+10400 : tensor(79.7754, device='cuda:0')
+test mse:  79.14319356282552
+10500 : tensor(79.8148, device='cuda:0')
+10600 : tensor(79.6297, device='cuda:0')
+test mse:  79.11920420328777
+10700 : tensor(79.8453, device='cuda:0')
+10800 : tensor(79.9500, device='cuda:0')
+test mse:  79.15992228190105
+10900 : tensor(79.6706, device='cuda:0')
+11000 : tensor(79.6802, device='cuda:0')
+test mse:  79.18054453531902
+11100 : tensor(79.6680, device='cuda:0')
+11200 : tensor(79.6853, device='cuda:0')
+test mse:  79.1786397298177
+11300 : tensor(79.5342, device='cuda:0')
+11400 : tensor(79.9124, device='cuda:0')
+test mse:  79.34474690755208
+11500 : tensor(79.5701, device='cuda:0')
+11600 : tensor(79.3360, device='cuda:0')
+test mse:  79.25705210367839
+11700 : tensor(79.3705, device='cuda:0')
+11800 : tensor(79.7368, device='cuda:0')
+test mse:  79.37913767496745
+11900 : tensor(79.5574, device='cuda:0')
+12000 : tensor(79.5649, device='cuda:0')
+test mse:  79.4570821126302
+12100 : tensor(79.4921, device='cuda:0')
+12200 : tensor(79.1698, device='cuda:0')
+test mse:  80.03437042236328
+12300 : tensor(88.8320, device='cuda:0')
+12400 : tensor(88.4341, device='cuda:0')
+test mse:  83.64370727539062
+12500 : tensor(88.1365, device='cuda:0')
+12600 : tensor(87.6171, device='cuda:0')
+test mse:  83.54588317871094
+12700 : tensor(87.5021, device='cuda:0')
+12800 : tensor(87.4578, device='cuda:0')
+test mse:  83.4728495279948
+12900 : tensor(87.0657, device='cuda:0')
+13000 : tensor(87.1164, device='cuda:0')
+test mse:  83.35383860270183
+13100 : tensor(87.1900, device='cuda:0')
+13200 : tensor(86.7920, device='cuda:0')
+test mse:  83.27422841389973
+13300 : tensor(87.1968, device='cuda:0')
+13400 : tensor(87.2663, device='cuda:0')
+test mse:  83.1768798828125
+13500 : tensor(87.2906, device='cuda:0')
+13600 : tensor(87.1542, device='cuda:0')
+test mse:  83.23025767008464
+13700 : tensor(87.2034, device='cuda:0')
+13800 : tensor(87.1877, device='cuda:0')
+test mse:  83.17348225911458
+13900 : tensor(87.1692, device='cuda:0')
+14000 : tensor(87.0696, device='cuda:0')
+test mse:  83.21729787190755
+14100 : tensor(87.0982, device='cuda:0')
+14200 : tensor(87.1240, device='cuda:0')
+test mse:  83.32062530517578
+14300 : tensor(87.0730, device='cuda:0')
+14400 : tensor(87.0114, device='cuda:0')
+test mse:  83.17218271891277
+14500 : tensor(87.0799, device='cuda:0')
+14600 : tensor(87.0130, device='cuda:0')
+test mse:  83.17916870117188
+14700 : tensor(87.0441, device='cuda:0')
+14800 : tensor(86.9949, device='cuda:0')
+test mse:  83.13852183024089
+14900 : tensor(87.0624, device='cuda:0')
+15000 : tensor(87.0645, device='cuda:0')
+test mse:  83.18387349446614
+15100 : tensor(87.0475, device='cuda:0')
+15200 : tensor(87.1758, device='cuda:0')
+test mse:  83.35039774576823
+15300 : tensor(87.0507, device='cuda:0')
+15400 : tensor(87.0260, device='cuda:0')
+test mse:  83.16180674235027
+15500 : tensor(87.0899, device='cuda:0')
+15600 : tensor(87.0630, device='cuda:0')
+test mse:  83.20004781087239
+15700 : tensor(86.9926, device='cuda:0')
+15800 : tensor(87.0481, device='cuda:0')
+test mse:  83.22487131754558
+15900 : tensor(87.0395, device='cuda:0')
+16000 : tensor(86.9517, device='cuda:0')
+test mse:  83.13353729248047
+16100 : tensor(86.9471, device='cuda:0')
+16200 : tensor(86.9574, device='cuda:0')
+test mse:  83.20247141520183
+16300 : tensor(86.9541, device='cuda:0')
+16400 : tensor(87.0046, device='cuda:0')
+test mse:  83.22965749104817
+16500 : tensor(87.0080, device='cuda:0')
+16600 : tensor(86.9168, device='cuda:0')
+test mse:  83.13792673746745
+16700 : tensor(87.0262, device='cuda:0')
+16800 : tensor(86.9941, device='cuda:0')
+test mse:  83.34810638427734
+16900 : tensor(86.9791, device='cuda:0')
+17000 : tensor(86.9872, device='cuda:0')
+test mse:  83.24000803629558
+17100 : tensor(86.9937, device='cuda:0')
+17200 : tensor(87.0192, device='cuda:0')
+test mse:  83.2414321899414
+17300 : tensor(86.9546, device='cuda:0')
+17400 : tensor(87.0198, device='cuda:0')
+test mse:  83.21096801757812
+17500 : tensor(87.0153, device='cuda:0')
+17600 : tensor(86.9737, device='cuda:0')
+test mse:  83.26261138916016
+17700 : tensor(86.9626, device='cuda:0')
+17800 : tensor(86.9685, device='cuda:0')
+test mse:  83.20747884114583
+17900 : tensor(86.9185, device='cuda:0')
+18000 : tensor(87.0712, device='cuda:0')
+test mse:  83.25949350992839
+18100 : tensor(86.8524, device='cuda:0')
+18200 : tensor(86.9549, device='cuda:0')
+test mse:  83.29232788085938
+18300 : tensor(86.9504, device='cuda:0')
+18400 : tensor(87.0136, device='cuda:0')
+test mse:  83.31739807128906
+18500 : tensor(87.0247, device='cuda:0')
+18600 : tensor(87.0432, device='cuda:0')
+test mse:  83.40372467041016
+18700 : tensor(86.9642, device='cuda:0')
+18800 : tensor(86.9457, device='cuda:0')
+test mse:  83.10297139485677
+18900 : tensor(86.9731, device='cuda:0')
+19000 : tensor(86.9382, device='cuda:0')
+test mse:  83.19279479980469
+19100 : tensor(87.0865, device='cuda:0')
+19200 : tensor(85.4797, device='cuda:0')
+test mse:  82.13336690266927
+19300 : tensor(83.5757, device='cuda:0')
+19400 : tensor(82.6184, device='cuda:0')
+test mse:  80.64072672526042
+19500 : tensor(81.3886, device='cuda:0')
+19600 : tensor(81.8028, device='cuda:0')
+test mse:  80.83326212565105
+19700 : tensor(81.9544, device='cuda:0')
+19800 : tensor(81.7227, device='cuda:0')
+test mse:  80.87353261311848
+19900 : tensor(81.8140, device='cuda:0')
+20000 : tensor(81.8677, device='cuda:0')
+test mse:  80.91385142008464
