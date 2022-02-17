@@ -63,7 +63,7 @@ def validate(index):
         gt_tensor, lr_tensor = get_pair(index)
         pre_tensor = test_model(lr_tensor.cpu())
         loss += mean_squared_error(gt_tensor.cpu().numpy(), pre_tensor.detach().numpy())
-    return loss / 3
+    return loss / 4
 
 
 def evaluate():
@@ -112,100 +112,10 @@ def trainNaiveNet():
                     break
 
 
-
-
-
-class WuNet(nn.Module):
-    def __init__(self):
-        super(WuNet, self).__init__()
-        self.block1 = nn.Sequential(
-            # 256*256*3
-            nn.Conv2d(3, 16, kernel_size=4, padding=0, stride=2),
-            nn.ReLU(),
-            # 126*126*16
-            nn.AvgPool2d(kernel_size=2, stride=2),
-            # 63*63*16
-
-        )
-        self.block2 = nn.Sequential(
-            nn.Linear(63*63*16, 63*63*16),
-            nn.ReLU(),
-            nn.Linear(63*63*16, 63*63*16),
-        )
-        self.block3 = nn.Sequential(
-            nn.ConvTranspose2d(16, 3, kernel_size=4, stride=2),
-        )
-
-        self.criterion = nn.MSELoss()
-        self.optimizer = torch.optim.Adam(self.parameters(), lr=0.01)
-
-    def forward(self, input_tensor):
-        y = self.block1(input_tensor)
-        print(y.shape)
-        y = y.reshape(-1, 1)
-        y = self.block2(y)
-        y = y.reshape(63, 63, 16)
-        y = self.block3(y)
-        return y
-
-
-
-# *******************************
-
-def convalidate(index, save_path2):
-    test_model = torch.load(save_path2+str(index)+'model.pth').cpu()
-    test_model.eval()
-    loss = 0
-    for index in range(11, 14):
-        gt_tensor, lr_tensor = get_pair(index)
-        pre_tensor = test_model(lr_tensor.cpu())
-        loss += mean_squared_error(gt_tensor.cpu().numpy(), pre_tensor.detach().numpy())
-    return loss / 3
-
-
-# need to add (1) resize (2) reshape to meet conv2d(4 dims)
-def get_pair_conv(index):
-    gt_dir = './NoNoise/'
-    lr_dir = './NoiseLevel7/'
-    gt_file = gt_dir + str(index) + '.png'
-    lr_file = lr_dir + str(index) + '.png'
-    gt = cv2.imread(gt_file)
-    gt_array = np.array(gt).reshape(-1, 1)
-    gt_tensor = torch.from_numpy(gt_array).astype(np.float32).reshape(1, 256, 256 , 3)
-
-    lr = cv2.imread(lr_file)
-    return gt, lr
-
-
-def trainWuNet():
-    save_path2 = './conv_models/'
-    epoch = 1000
-    WuNet_model = WuNet()
-    for i in range(epoch):
-        for index in range(1, 11):
-            gt_tensor, lr_tensor = get_pair_conv(index)
-            pre_tensor = WuNet_model(lr_tensor)
-            loss = WuNet_model.criterion(pre_tensor, gt_tensor)
-            WuNet_model.optimizer.zero_grad()
-            loss.backward()
-            WuNet_model.optimizer.step()
-
-        if i % 100 == 0:
-            print('loss: ', loss.data)
-            if (i+1) % 200 == 0:
-                torch.save(WuNet_model, save_path2+str(i)+'model.pth')
-                test_error = convalidate(i+1, save_path2)
-                print(test_error)
-                if test_error < 10:
-                    break
-                
-
-
 if __name__ == '__main__':
     # cuda
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    # model = NaiveNet().cuda()
-    # trainNaiveNet()
-    # evaluate()
-    trainWuNet()
+    model = NaiveNet().cuda()
+    trainNaiveNet()
+    evaluate()
         
