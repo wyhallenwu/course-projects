@@ -10,7 +10,20 @@ import (
 	"strings"
 )
 
+// 判断是否是黑名单里的ip
+func IsContain(items []string, item string) bool {
+	for _, eachItem := range items {
+		if eachItem == item {
+			return true
+		}
+	}
+	return false
+}
+
+
 func main() {
+	// 设置不能提供服务的ip
+	var BlackList = []string{"49.52.99.103",}
 	// tcp连接，监听8080端口
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
@@ -21,17 +34,23 @@ func main() {
 		if err != nil {
 			log.Panic(err)
 		}
-		go Handle(client)
+		go Handle(client, BlackList)
 	}
 }
 
-func Handle(client net.Conn) {
+func Handle(client net.Conn, BlackList []string) {
 	if client == nil {
 		log.Println("client wrong.")
 		return
 	}
 	defer client.Close()
 	log.Printf("remote addr: %v\n", client.RemoteAddr())
+	index := strings.Index(client.RemoteAddr().String(), ":")
+	if IsContain(BlackList, client.RemoteAddr().String()[:index]) == true{
+		client.Close()
+		log.Println("dangerous ip")
+		return
+	}
 
 	// 用来存放客户端数据的缓冲区
 	var buf [1024]byte
