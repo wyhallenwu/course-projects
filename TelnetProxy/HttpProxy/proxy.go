@@ -61,6 +61,10 @@ func Handle(client net.Conn, BlackList []string) {
 		return
 	}
 
+	if n > 0 {
+		log.Println(string(buf[:n]))
+	}
+
 	var method, URL, address string
 	// 从客户端数据读入method，url
 	fmt.Sscanf(string(buf[:bytes.IndexByte(buf[:], '\n')]), "%s%s", &method, &URL)
