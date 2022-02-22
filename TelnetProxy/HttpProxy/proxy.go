@@ -45,6 +45,7 @@ func Handle(client net.Conn, BlackList []string) {
 	}
 	defer client.Close()
 	log.Printf("remote addr: %v\n", client.RemoteAddr())
+	log.Printf("addr: %v\n", client.LocalAddr())
 	index := strings.Index(client.RemoteAddr().String(), ":")
 	if IsContain(BlackList, client.RemoteAddr().String()[:index]) == true{
 		client.Close()
