@@ -12,24 +12,21 @@ import (
 	// "net/http"
 )
 
-// 判断是否是黑名单里的ip
-func IsContain(items []string, item string) bool {
-	for _, eachItem := range items {
-		if eachItem == item {
-			return true
-		}
-	}
-	return false
-}
+
 
 
 func main() {
+	// 设置参数 dangerouIp:屏蔽的客户端ip， keyword:屏蔽的服务器站点
 	var dangerousIp string
+	var keyword string
 	flag.StringVar(&dangerousIp, "ip", "", "默认为空")
+	flag.StringVar(&keyword, "kw", "none", "默认为空")
 	flag.Parse()
+
 	// 设置不能提供服务的ip
 	var BlackList = []string{"49.52.99.102",}
 	BlackList = append(BlackList, dangerousIp)
+
 	// tcp连接，监听8080端口
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
@@ -41,18 +38,18 @@ func main() {
 		if err != nil {
 			log.Panic(err)
 		}
-		go Handle(client, BlackList)
+		go Handle(client, BlackList, keyword)
 	}
 }
 
-func Handle(client net.Conn, BlackList []string) {
+func Handle(client net.Conn, BlackList []string, keyword string) {
 	if client == nil {
 		log.Println("client wrong.")
 		return
 	}
 	defer client.Close()
-	log.Printf("remote addr: %v\n", client.RemoteAddr())
-	log.Printf("addr: %v\n", client.LocalAddr())
+	// log.Printf("remote addr: %v\n", client.RemoteAddr())
+	// log.Printf("addr: %v\n", client.LocalAddr())
 	index := strings.Index(client.RemoteAddr().String(), ":")
 	if IsContain(BlackList, client.RemoteAddr().String()[:index]) == true{
 		Redirect2(client)
@@ -70,18 +67,34 @@ func Handle(client net.Conn, BlackList []string) {
 		return
 	}
 
-	if n > 0 {
-		log.Println(string(buf[:n]))
+	// if n > 0 {
+	// 	log.Println(string(buf[:n]))
+	// }
+
+	// 判断是否是要过滤的站点，是则断开连接
+	if Filter(string(buf[:]), keyword) {
+		client.Close()
+		log.Println("can't access ", keyword)
+		return
 	}
 
-	var method, URL, address string
+
 	// 从客户端数据读入method，url
+	var method, URL, address string
 	fmt.Sscanf(string(buf[:bytes.IndexByte(buf[:], '\n')]), "%s%s", &method, &URL)
 	hostPortURL, err := url.Parse(URL)
+	log.Println(hostPortURL)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
+	if IsLocal(hostPortURL.Host) {
+		client.Close()
+		log.Println("can't access local")
+		return
+	}
+
 
 	// 如果方法是CONNECT，则为https协议
 	if method == "CONNECT" {
@@ -109,6 +122,7 @@ func Handle(client net.Conn, BlackList []string) {
 		server.Write(buf[:n])
 	}
 
+	//传输的内容直接转发
 	go io.Copy(server, client)
 	io.Copy(client, server)
 }
@@ -142,26 +156,31 @@ func Redirect2(client net.Conn) {
 }
 
 
+// 过滤希望屏蔽的站点
+func Filter(header string, keyword string) bool {
+	if strings.Contains(header, keyword) {
+		return true
+	}
+	return  false
+}
 
-// IsLocalIP 判断是否是内网ip
-func IsLocalIP(ip net.IP) bool {
-    if ip == nil {
-        return false
-    }
-    // 判断是否是回环地址, ipv4时是127.0.0.1；ipv6时是::1
-    if ip.IsLoopback() {
-        return true
-    }
-    // 判断ipv4是否是内网
-    if ip4 := ip.To4(); ip4 != nil {
-        return ip4[0] == 10 || // 10.0.0.0/8
-            (ip4[0] == 172 && ip4[1] >= 16 && ip4[1] <= 31) || // 172.16.0.0/12
-            (ip4[0] == 192 && ip4[1] == 168) // 192.168.0.0/16
-    }
-    // 判断ipv6是否是内网
-    if ip16 := ip.To16(); ip16 != nil {
-        return 0xfd == ip16[0]
-    }
-    // 不是ip间接返回false
-    return false
+// 判断是否是黑名单里的ip
+func IsContain(items []string, item string) bool {
+	for _, eachItem := range items {
+		if eachItem == item {
+			return true
+		}
+	}
+	return false
+}
+
+// 判断是否是在访问代理服务器，防止攻击
+func IsLocal(requestIp string) bool{
+	var IpSet = []string{"1.15.176.231", "127.0.0.1"}
+	for _, eachIp := range IpSet {
+		if requestIp == eachIp {
+			return true
+		}
+	}
+	return false
 }
