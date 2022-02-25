@@ -48,8 +48,8 @@ func Handle(client net.Conn, BlackList []string, keyword string) {
 		return
 	}
 	defer client.Close()
-	// log.Printf("remote addr: %v\n", client.RemoteAddr())
-	// log.Printf("addr: %v\n", client.LocalAddr())
+	log.Printf("remote addr: %v\n", client.RemoteAddr())
+	log.Printf("addr: %v\n", client.LocalAddr())
 	index := strings.Index(client.RemoteAddr().String(), ":")
 	if IsContain(BlackList, client.RemoteAddr().String()[:index]) == true{
 		Redirect2(client)
@@ -67,9 +67,9 @@ func Handle(client net.Conn, BlackList []string, keyword string) {
 		return
 	}
 
-	// if n > 0 {
-	// 	log.Println(string(buf[:n]))
-	// }
+	if n > 0 {
+		log.Println(string(buf[:n]))
+	}
 
 	// 判断是否是要过滤的站点，是则断开连接
 	if Filter(string(buf[:]), keyword) {
