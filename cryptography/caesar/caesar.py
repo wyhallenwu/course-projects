@@ -1,4 +1,3 @@
-import numpy as np
 import argparse
 
 
@@ -13,8 +12,8 @@ def initialize():
 
     # set arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--step',
-                        '-s',
+    parser.add_argument('--offset',
+                        '-o',
                         type=int,
                         action='store',
                         help='please input steps')
@@ -25,9 +24,9 @@ def initialize():
                         help='please input plaintext')
 
     args = parser.parse_args()
-    step = args.step
+    offset = args.offset
     plaintext = args.plaintext
-    return plaintext.lower(), step, alphabet
+    return plaintext.lower(), offset, alphabet
 
 
 # encrypt
@@ -54,6 +53,7 @@ def decrypt(encryptText, step, cipherbook):
 
 if __name__ == '__main__':
     plaintext, step, cipherbook = initialize()
+    print("plaintext text: ", plaintext)
     encryptText = encrypt(plaintext, step, cipherbook)
     print("encrypt text: ", encryptText)
     decryptText = decrypt(encryptText, step, cipherbook)
