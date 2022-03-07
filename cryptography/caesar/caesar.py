@@ -41,6 +41,7 @@ def encrypt(plaintext, step, cipherbook):
     return encryptText
 
 
+# decrypt
 def decrypt(encryptText, step, cipherbook):
     plaintext = ""
     for c in encryptText:
