@@ -93,6 +93,7 @@ def decrypt(encryptText, alphabet, slope, offset, gcdNum):
 
 if __name__ == '__main__':
     plainText, alphabet, slope, offset, gcdNum = initialize()
+    print("plain text: ", plainText)
     encryptText = encrypt(plainText, alphabet, slope, offset)
     print("encrypt text: ", encryptText)
     decryptText = decrypt(encryptText, alphabet, slope, offset, gcdNum)
