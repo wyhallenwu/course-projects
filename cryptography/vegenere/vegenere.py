@@ -28,7 +28,7 @@ def initialize():
 def plainTextFromFile(filePath):
     with open(filePath, 'r') as f:
         plainText = f.read()
-        return plainText
+        return plainText.lower()
 
 
 # encrypt
@@ -62,7 +62,8 @@ def decrypt(encryptText, alphabet, crypto):
 if __name__ == '__main__':
     filePath, crypto, alphabet, alphabet = initialize()
     plainText = plainTextFromFile(filePath)
+    print("plain text: ", plainText)
     encryptText = encrypt(filePath, crypto, alphabet)
-    print(encryptText)
+    print("encrypt text: ", encryptText)
     decryptText = decrypt(encryptText, alphabet, crypto)
-    print(decryptText)
+    print("decrypt text: ", decryptText)
