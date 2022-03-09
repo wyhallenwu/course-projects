@@ -7,6 +7,10 @@ name = "pypi"
 numpy = "*"
 jieba = "*"
 yapf = "*"
+nltk = "*"
+matplotlib = "*"
+pyqt5 = "*"
+argparse = "*"
 
 [dev-packages]
 
