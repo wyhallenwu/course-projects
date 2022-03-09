@@ -11,6 +11,7 @@ nltk = "*"
 matplotlib = "*"
 pyqt5 = "*"
 argparse = "*"
+zhon = "*"
 
 [dev-packages]
 

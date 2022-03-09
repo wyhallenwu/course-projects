@@ -40,7 +40,7 @@ def preprocess(line):
 
 def write2json(freqList, filename):
     with open(filename, 'w') as f:
-        json.dump(freqList, f)
+        json.dump(freqList, f, indent=4)
     print("write over...")
 
 
@@ -72,7 +72,7 @@ def GetTopK(k):
         wordList.append(freqList[i][0])
         freq.append(freqList[i][1])
 
-    fig, ax = plt.subplots(1, 1)
+    _, ax = plt.subplots(1, 1)
     ax.plot(wordList, freq)
     plt.xlabel('word')
     plt.ylabel('frequency')
@@ -95,3 +95,4 @@ if __name__ == '__main__':
     print("get topK: ", li)
     for i in li:
         GetTopK(i)
+    GetAllFreq()
