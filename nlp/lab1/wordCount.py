@@ -5,6 +5,7 @@ import json
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import argparse
+import numpy as np
 
 
 def GetAllFreq():
@@ -82,6 +83,15 @@ def GetTopK(k):
     print("save fig" + str(k))
 
 
+# compute topK words' entropy
+def getEntropy(k):
+    freqList = readFromAll()
+    count_all = sum(list([freq[1] for freq in freqList[:k]]))
+    probability = [freq[1] / float(count_all) for freq in freqList[:k]]
+    entropy = (-1) * sum([p * np.log2(p) for p in probability])
+    print("entropy is: ", entropy)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--list",
@@ -95,4 +105,5 @@ if __name__ == '__main__':
     print("get topK: ", li)
     for i in li:
         GetTopK(i)
-    GetAllFreq()
+        getEntropy(i)
+    # GetAllFreq()

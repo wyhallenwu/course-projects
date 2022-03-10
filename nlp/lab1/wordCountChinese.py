@@ -3,8 +3,10 @@ import jieba
 import re
 from zhon.hanzi import punctuation
 import json
+import numpy as np
 
 
+# read the dataset and here must encoding as gb18030
 def readFile(filename):
     with open(filename, 'r', encoding='gb18030') as f:
         text = ""
@@ -15,6 +17,7 @@ def readFile(filename):
     return text
 
 
+# clean the dataset
 def preprocess(line):
     # remove number
     line = re.sub(r'[0-9]+', '', line)
@@ -27,11 +30,13 @@ def preprocess(line):
     return line
 
 
+# do segmentation for dataset
 def segmentation(text):
     segList = jieba.lcut(text)
     return segList
 
 
+# countWords sum the frequency of each word
 def countWords(segList):
     counts = {}
     for word in segList:
@@ -42,6 +47,7 @@ def countWords(segList):
     return countList
 
 
+# pipeline is the whole process from reading dataset to get frequency list
 def pipeline(filename):
     text = readFile(filename)
     segList = segmentation(text)
@@ -49,14 +55,35 @@ def pipeline(filename):
     return counts
 
 
-def GetTopK(k):
+# get topK words' frequency list
+def GetTopK(k, counts):
     return counts[:k]
 
 
+# compute entropy for topK words
+def getEntropy(k, counts):
+    counts = GetTopK(k, counts)
+    count_all = sum(freq[1] for freq in counts)
+    probability = list([freq[1] / count_all for freq in counts])
+    entropy = (-1) * sum(p * np.log2(p) for p in probability)
+    print("entropy is: ", entropy)
+
+
+# write the topK words frequency list to a json file
 def write2json(freqList, filename):
     with open(filename, 'w', encoding="gb18030") as f:
         json.dump(freqList, f, ensure_ascii=False, indent=4)
     print("write over...")
+
+
+def countChar(text):
+    counts = {}
+    for c in text:
+        counts[c] = counts.get(c, 0) + 1
+
+    countList = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    write2json(countList, "./result/all_frequency_single_char.json")
+    getEntropy(len(countList), countList)
 
 
 if __name__ == '__main__':
@@ -76,6 +103,7 @@ if __name__ == '__main__':
     li = args.list
 
     counts = pipeline(filename)
-    # for i in li:
-    #     print(GetTopK(i))
-    write2json(counts, "./result/all_frequency_chinese.json")
+    for i in li:
+        print(getEntropy(i, counts))
+    # write2json(counts, "./result/all_frequency_chinese.json")
+    countChar(readFile(filename))
