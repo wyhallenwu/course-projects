@@ -105,5 +105,5 @@ if __name__ == '__main__':
     print("get topK: ", li)
     for i in li:
         GetTopK(i)
-        getEntropy(i)
+        # getEntropy(i)
     # GetAllFreq()
