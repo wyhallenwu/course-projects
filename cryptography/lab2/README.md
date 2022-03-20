@@ -13,3 +13,4 @@ cd cmd/
 ```
 The secuet mes*age*is* Whtn using aa*tream cipher**never*use the key more than once
 ```
+> The secret message is: When using a stream cipher never use the key more than once
