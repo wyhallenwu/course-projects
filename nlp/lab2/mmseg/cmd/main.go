@@ -1,16 +1,29 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"mmseg/internal/mmseggo"
+	"os"
 )
 
 func main() {
 	filename := "../dataset/data.txt"
 	dict := mmseggo.NewDict(filename)
-	var text = []string{"张志刚是一名信息员", "中关村是中国的硅谷", "我们必须坚持马克思主义和毛泽东思想",
-		"明天可能会下雨", "请不要大声喧哗"}
-	for _, sentence := range text {
+	// read raw data and form them in a []string
+	file, _ := os.Open("../dataset/raw.txt")
+	defer file.Close()
+	reader := bufio.NewReader(file)
+	var sentences []string
+	for {
+		line, _, err := reader.ReadLine()
+		if err != nil {
+			break
+		}
+		sentences = append(sentences, string(line))
+	}
+
+	for _, sentence := range sentences {
 		result := dict.CutWholeSentence(sentence)
 		fmt.Println(result)
 	}
