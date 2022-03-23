@@ -37,21 +37,11 @@ MMSEG is a simple but useful algorithm to solve Chinese segmentation problems. A
   用一个简单的图表来说明
   ![table](img/table.png "confusion matrix")
   
-  $$
-  \begin{aligned}
-  accuracy &= \frac{TP+TN}{TP+FP+FN+TN}\\
-  precision &= \frac{TP}{TP+FP} \\
-  recall &= \frac{TP}{TP+FN} \\
-  F-score &= (1+\beta^2)\frac{precision*recall}{\beta^2*precision+recall} \\
-  \end{aligned}
-  $$
+  ![](https://latex.codecogs.com/svg.image?\begin{aligned}&space;&space;accuracy&space;&=&space;\frac{TP&plus;TN}{TP&plus;FP&plus;FN&plus;TN}\\&space;&space;precision&space;&=&space;\frac{TP}{TP&plus;FP}&space;\\&space;&space;recall&space;&=&space;\frac{TP}{TP&plus;FN}&space;\\&space;&space;F-score&space;&=&space;(1&plus;\beta^2)\frac{precision*recall}{\beta^2*precision&plus;recall}&space;\\&space;&space;\end{aligned})
 
 以图片分类问题中的一个例子来看[参考](https://zhuanlan.zhihu.com/p/100552669)   
 ![example](img/example.png "example")
-$ accuracy = \frac{20+57}{20+18+5+7}$
-$ precision = \frac{20}{20+18} $
-$ recall = \frac{20}{20+5} $
-$ F_1 = (1+1^2)*\frac{precision*recall}{1*precision+recall}$
+![](https://latex.codecogs.com/svg.image?$$\begin{aligned}accuracy&space;&=&space;\frac{20&plus;57}{20&plus;18&plus;5&plus;7}\\precision&space;&=&space;\frac{20}{20&plus;18}&space;\\recall&space;&=&space;\frac{20}{20&plus;5}&space;\\F_1&space;&=&space;(1&plus;1^2)*\frac{precision*recall}{1*precision&plus;recall}\end{aligned}&space;)
 
 **NLP的分词如何评估？**
 NLP分词同样可以使用上面几个标准来评估，但是有所变化。  
@@ -60,8 +50,7 @@ NLP分词同样可以使用上面几个标准来评估，但是有所变化。
 groudtruth可以写成 $ TP \cup FN = A $
 分词结果也就是对groudtruth的一个预测可以写成 $ TP \cup FP = B $
 计算precision和recall:
-1. $ precision = \frac{|A \cap B|}{|B|}$
-2. $ recall = \frac{|A \cap B|}{|A|} $
+![](https://latex.codecogs.com/svg.image?$$\begin{aligned}precision&space;=&space;\frac{|A&space;\cap&space;B|}{|B|}\\recall&space;=&space;\frac{|A&space;\cap&space;B|}{|A|}&space;\end{aligned}&space;)
 
 在上面的例子中，“武汉_市长_江大桥”$ A \cap B = \emptyset$，“武汉市_长江大桥” $ A \cap B = [1,2][3,4][5,7] $， groudtruth $ A = [1,2][3,4][5,7]$ 。所以对于第一种分词结果$ precision=recall=0 $,第二种分词结果 $precision=\frac{3}{3}=1, recall=\frac{3}{3}=1 $
 
