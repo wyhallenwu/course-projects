@@ -1,19 +1,12 @@
 [[source]]
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "*"
-jieba = "*"
-yapf = "*"
-nltk = "*"
-matplotlib = "*"
-pyqt5 = "*"
-argparse = "*"
-zhon = "*"
 
 [dev-packages]
+yapf = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.7"
