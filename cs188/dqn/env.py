@@ -4,17 +4,20 @@ import random
 from collections import deque
 import dqnnet
 import numpy as np
+import matplotlib.pylab as plt
 
 Action_space = 2
 State_space = 4
-Episode = 1000
-Steps = 200
-Gamma = 0.99
-Experience_pool_capacity = 300
-Batch_size = 32
+# hyperparameter
+Episode = 2000
+Gamma = 0.5
+Experience_pool_capacity = 400
+Batch_size = 80
 LR = 1e-3
-Epsilon = 0.3
-Update_Iter = 100
+Epsilon = 0.2
+Update_Iter = 50
+Model_save_path = f'./{Episode}_model.pth'
+Result_img_save_path = f'./result.jpg'
 
 
 class ExperiencePool(object):
@@ -22,6 +25,8 @@ class ExperiencePool(object):
         self.experience_pool = deque([], maxlen=capacity)
 
     def push(self, experience):
+        if len(self.experience_pool) == Experience_pool_capacity:
+            self.experience_pool.popleft()
         self.experience_pool.append(experience)
 
     def sample(self, batch_size):
@@ -36,7 +41,7 @@ class DQN(object):
         self.eval_dqn = dqnnet.DQNnet(State_space, Action_space)
         self.target_dqn = dqnnet.DQNnet(State_space, Action_space)
         self.update_counter = 0  # update target counter
-        self.optimizer = torch.optim.RMSprop(self.eval_dqn.parameters(), lr=LR)
+        self.optimizer = torch.optim.Adam(self.eval_dqn.parameters(), lr=LR)
         self.loss_fn = torch.nn.MSELoss()
         self.experience_pool = ExperiencePool(Experience_pool_capacity)
 
@@ -64,8 +69,8 @@ class DQN(object):
             b_a.append(ex[1])
             b_r.append(ex[2])
             b_s_.append(ex[3])
-        return torch.FloatTensor(b_s), torch.LongTensor(b_a), \
-                        torch.FloatTensor(b_r), torch.FloatTensor(b_s_)
+        return torch.FloatTensor(np.array(b_s)), torch.LongTensor(np.array(b_a)), \
+                        torch.FloatTensor(np.array(b_r)), torch.FloatTensor(np.array(b_s_))
 
     def training(self):
         # update target parameters
@@ -79,13 +84,10 @@ class DQN(object):
         batch_state, batch_action, batch_reward, batch_next_state = \
             self.batch_info(batch_transitions)
 
-        # TODO: eval_q is the
-        print(torch.unsqueeze(batch_action, 0).shape)
-        eval_q = self.eval_dqn(batch_state).gather(0, torch.unsqueeze(batch_action, 0))
-        print(eval_q.shape, batch_action.shape)
+        eval_q = self.eval_dqn(batch_state).gather(1, torch.unsqueeze(batch_action, 1))
         q_next_max = torch.max(self.target_dqn(batch_next_state), 1)[0].detach()
         q_target = batch_reward + Gamma * q_next_max
-        loss = self.loss_fn(eval_q, q_target)
+        loss = self.loss_fn(eval_q, torch.unsqueeze(q_target, 1))
         print(f"loss: {loss}")
         self.optimizer.zero_grad()
         loss.backward()
@@ -96,14 +98,16 @@ if __name__ == '__main__':
     env = gym.make('CartPole-v0')
     print(env.observation_space)
     print(env.action_space)
-
+    # plot reward of each episode
+    reward_list = []
     dqn = DQN()
 
     for i in range(Episode):
         s = env.reset()
         all_reward = 0
         while True:
-            env.render()
+            # env.render()
+
             # select an action
             a = dqn.select_action(s)
             # observe next state
@@ -115,11 +119,16 @@ if __name__ == '__main__':
                 dqn.training()
                 if done:
                     print(f"episode {i} ; reward {all_reward} ")
-                    break
+                    reward_list.append(all_reward)
+            if done:
+                break
             # execute the action and move to next state
             s = next_s
     env.close()
 
-    torch.save(dqn.target_dqn.state_dict(), "./model1.pth")
+    torch.save(dqn.target_dqn.state_dict(), Model_save_path)
+    plt.plot([x for x in range(len(reward_list))], reward_list)
+    plt.savefig(Result_img_save_path)
+    plt.show()
     print("save and quit")
 

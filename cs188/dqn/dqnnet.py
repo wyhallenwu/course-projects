@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -10,14 +11,16 @@ class DQNnet(nn.Module):
         super(DQNnet, self).__init__()
         self.net = nn.Sequential(
             nn.Linear(self.state_dimension, 128),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Linear(128, 128),
-            nn.ReLU(),
+            nn.LeakyReLU(),
+            nn.Linear(128, 128),
+            nn.LeakyReLU(),
             nn.Linear(128, self.action_dimension),
         )
 
     def forward(self, current_state):
-        s = torch.tensor(current_state)
+        s = torch.tensor(np.array(current_state))
         actions = self.net(s)
         return actions
 
