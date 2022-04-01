@@ -2,13 +2,12 @@ import torch
 import torch.nn as nn
 
 
-class DQN(nn.Module):
-    def __init__(self, state_dim, action_dim, learning_rate):
+class DQNnet(nn.Module):
+    def __init__(self, state_dim, action_dim):
         self.state_dimension = state_dim
         self.action_dimension = action_dim
-        self.learning_rate = learning_rate
 
-        super(DQN).__init__()
+        super(DQNnet, self).__init__()
         self.net = nn.Sequential(
             nn.Linear(self.state_dimension, 128),
             nn.ReLU(),
@@ -19,7 +18,9 @@ class DQN(nn.Module):
 
     def forward(self, current_state):
         s = torch.tensor(current_state)
-        action_prob = self.net(s)
-        return action_prob
+        actions = self.net(s)
+        return actions
+
+
 
 
