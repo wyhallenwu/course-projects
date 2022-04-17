@@ -1,0 +1,6 @@
+/lab2/mmseg/.idea
+/config.json
+/ltp.model
+/*.zip
+/stanford*
+/tencent*
