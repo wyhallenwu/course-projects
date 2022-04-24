@@ -201,12 +201,19 @@ class NMT(nn.Module):
         ###     Tensor Permute:
         ###         https://pytorch.org/docs/stable/tensors.html#torch.Tensor.permute
 
+        # X: word_embeddings of the batch (src_length, b, e)
         X = self.model_embeddings.source(source_padded)
+        # feed into lstm
+        # enc_hiddens (src_len, b, h*2)
+        # last_hidden (2, b, h)
+        # last_cell (2, b, h)
         enc_hiddens, (last_hidden, last_cell) = self.encoder(
             pack_padded_sequence(X, source_lengths))
-        # (b, src, h*2)
+        # (b, src_len, h*2)
         enc_hiddens = pad_packed_sequence(enc_hiddens)[0].permute(1, 0, 2)
         # concatenate forward, backward
+        # init_decoder_hidden (b, h*2) * (h*2, h) -> (b, h)
+        # init_decoder_cell (b, h*2) * (h*2, h) -> (b, h)
         init_decoder_hidden = self.h_projection(
             torch.cat((last_hidden[0], last_hidden[1]), 1))
         init_decoder_cell = self.c_projection(
@@ -214,6 +221,8 @@ class NMT(nn.Module):
         dec_init_state = (init_decoder_hidden, init_decoder_cell)
         ### END YOUR CODE
 
+        # enc_hiddens (b, src_len, h*2)
+        # dec_init_state ((b, h), (b, h))
         return enc_hiddens, dec_init_state
 
     def decode(self, enc_hiddens: torch.Tensor, enc_masks: torch.Tensor,
@@ -287,7 +296,7 @@ class NMT(nn.Module):
         # Y (maxlength-1, b, embed_size)
         Y = self.model_embeddings.target(target_padded)
         for i in range(Y.size(0)):
-            # y_bar_t (b, embed_size + hidden_size)
+            # y_bar_t[target_e, o_t] (b, embed_size + hidden_size)
             # combined_output -> o_t
             Ybar_t = torch.cat((Y[i], o_prev), 1)
             dec_state, o_t, e_t = self.step(Ybar_t, dec_state, enc_hiddens,
@@ -401,6 +410,7 @@ class NMT(nn.Module):
         U_t = torch.cat((a_t, dec_hidden), 1)
         # V_t (b, h)
         V_t = self.combined_output_projection(U_t)
+        # O_t (b, h)
         O_t = self.dropout(torch.tanh(V_t))
 
         ### END YOUR CODE
