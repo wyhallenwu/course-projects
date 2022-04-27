@@ -9,7 +9,10 @@ nlp tasks have some difference between Chinese and English. For instance, Chines
 > \* means the lab is the same as cs224n
 - [x] gensim(*)
 - [x] word2vec(*)
-- [ ] dependency parsing(*)
+- [x] dependency parsing(*)
+- [x] machine translation(*)
+- [x] GPT-3 pre-trained test(*)
+- [x] final project(Question answering BiDaf)
 ***
 - [x] chinese text segmentation--mmseg algorithm
 - [x] a glance at some toolkits(ltp, nltk, jieba)
