@@ -232,12 +232,12 @@ class CharacterEmbeddingLayer(nn.Module):
     """Character Embedding layer in original paper
 
     Compute character embeddings following the 4.model details in paper BiDaf
-    and layer architecture in paper https://arxiv.org/abs/1408.5882
+    and layer architecture in paper https://arxiv.org/abs/1408.5882 . It is a little 
+    different from the original paper in some details. See more in the code comment.
 
     Args:
         hidden_size (int): Hidden size used in BiDaf 
         char_vectors (tensor): pre-trained char vectors
-        filter_num (int): number of filters
         char_idxs (tensor): character indexs of the batch of sentences
     """
 
@@ -268,7 +268,7 @@ class CharacterEmbeddingLayer(nn.Module):
         # shape (batch_size * sent_len, 100, sub_char_len - window_size + 1)
         embed = F.conv1d(embed, filter, stride=embed_size[3]).view(
             embed_size[0] * embed_size[1], 100, -1)
-
+        # original paper using relu
         embed = F.tanh(embed)
         # max-over-time pooling  (batch_size, sent_len, 100)
         embed = F.max_pool1d(embed, embed_size[2] - window_size + 1).view(
