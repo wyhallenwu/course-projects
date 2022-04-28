@@ -50,3 +50,24 @@ print(z.shape)
 print("--")
 l = [x, y]
 print(torch.cat(l, dim=2).shape)
+
+print('-' * 20)
+# batch_size, sent, sub, emb
+x = torch.rand(20, 307, 16, 64)
+# outc, inc, window
+f = torch.rand(100, 307, 16, 64)
+z = F.conv2d(x, f).squeeze()
+print(z.shape)
+x = torch.rand(20 * 307, 1, 16 * 64)
+y = torch.rand(100, 1, 5 * 64)
+z = F.conv1d(x, y, stride=64)
+print(z.shape)
+z = z.view(20 * 307, 100, -1)
+z = F.max_pool1d(z, 12)
+print(z.shape)
+z = z.view(20, 307, -1)
+print(z.shape)
+# q = z
+# o = [z, q]
+# print(z.shape)
+# print(torch.cat(o, dim=2).shape)

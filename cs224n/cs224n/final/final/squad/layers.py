@@ -28,6 +28,7 @@ class Embedding(nn.Module):
         super(Embedding, self).__init__()
         self.drop_prob = drop_prob
         self.embed = nn.Embedding.from_pretrained(word_vectors)
+        # word_vectors shape(88430, 300)
         self.proj = nn.Linear(word_vectors.size(1), hidden_size, bias=False)
         self.hwy = HighwayEncoder(2, hidden_size)
 
@@ -36,7 +37,6 @@ class Embedding(nn.Module):
         emb = F.dropout(emb, self.drop_prob, self.training)
         emb = self.proj(emb)  # (batch_size, seq_len, hidden_size)
         emb = self.hwy(emb)  # (batch_size, seq_len, hidden_size)
-
         return emb
 
 
@@ -100,7 +100,7 @@ class RNNEncoder(nn.Module):
         # Sort by length and pack sequence for RNN
         lengths, sort_idx = lengths.sort(0, descending=True)
         x = x[sort_idx]  # (batch_size, seq_len, input_size)
-        x = pack_padded_sequence(x, lengths, batch_first=True)
+        x = pack_padded_sequence(x, lengths.cpu(), batch_first=True)
 
         # Apply RNN
         x, _ = self.rnn(x)  # (batch_size, seq_len, 2 * hidden_size)
@@ -241,54 +241,60 @@ class CharacterEmbeddingLayer(nn.Module):
         char_idxs (tensor): character indexs of the batch of sentences
     """
 
-    def __init__(self, hidden_size, char_vectors, filter_num, drop_prob):
+    def __init__(self, hidden_size, char_vectors, drop_prob):
         super(CharacterEmbeddingLayer, self).__init__()
         self.hidden_size = hidden_size
         self.drop_prob = drop_prob
-        # filter_shape [num of filters, width of kernel]
-        self.filter_num = filter_num
+        self.window_size_list = [x for x in range(2, 6)]
         # char_embedding
         self.char_embed = nn.Embedding.from_pretrained(char_vectors)
+        # char_vector shape(1376, 64)
 
     def single_conv(self, char_idxs, window_size):
-        # embed (batch_size, sent_char_len, embedding_size: 100)
+        # embed (batch_size, sent_len, sub_char_len, embedding_size: 64)
         embed = self.char_embed(char_idxs)
         embed_size = embed.size()
-        # dropout layer
+        # embed (batch_size * sent_len, 1, sub_char_len * embedding_size)
+        embed = embed.view(embed_size[0] * embed_size[1], 1, -1)
+        # dropout layer (used in original paper)
         embed = F.dropout(embed, self.drop_prob)
-        # in original paper, filter_shape (100 filters, width of 5)
-        filter = torch.randn(1, 1, window_size, embed_size[2])
-        # embed (batch_size, sent_char_len - window_size + stride: 1)
-        embed = F.conv2d(embed.unsqueeze(1), filter).squeeze()
-        embed = F.relu(embed)
-        # max-over-time pooling  (batch_size, 1, 1)
-        embed = F.max_pool1d(embed.unsqueeze(1),
-                             embed_size[1] - window_size + 1)
+        # in original paper, filter_shape (100 filters)
+        # conv1d = nn.Conv1d(1, 100, window_size * embed_size[3])
+        # embed = conv1d(embed).view(embed_size[0] * embed_size[1], 100, -1)
 
-        # (batch_size, 1, 1)
+        filter = nn.Parameter(
+            nn.init.xavier_uniform_(
+                torch.empty(100, 1, window_size * embed_size[3]))).cuda()
+        # shape (batch_size * sent_len, 100, sub_char_len - window_size + 1)
+        embed = F.conv1d(embed, filter, stride=embed_size[3]).view(
+            embed_size[0] * embed_size[1], 100, -1)
+
+        embed = F.tanh(embed)
+        # max-over-time pooling  (batch_size, sent_len, 100)
+        embed = F.max_pool1d(embed, embed_size[2] - window_size + 1).view(
+            embed_size[0], embed_size[1], 100)
         return embed
 
     def multi_conv(self, char_idxs):
         outs = []
-        window_size_list = [x for x in range(2, 5)]
-        window_size_len = len(window_size_list)
         # multi-conv using different window_size
-        for i in range(self.filter_num):
-            outs.append(
-                self.single_conv(char_idxs,
-                                 window_size_list[i % window_size_len]))
-        # shape (batch_size, filter_num)
-        outs = torch.cat(outs, dim=2).squeeze()
+        for _, window_size in enumerate(self.window_size_list):
+            outs.append(self.single_conv(char_idxs, window_size))
+        # shape (batch_size, sent_len, 100)
+        outs = torch.cat(outs, dim=2)
+        # (batch_size, sent_len, window_list_len * 100)
         return outs
 
     def forward(self, char_idxs):
-        embed_size = self.char_embed(char_idxs).size()
-        outs = self.multi_conv(char_idxs)  # (batch_size, filter_num)
+        outs = self.multi_conv(
+            char_idxs)  # (batch_size, sent_len, window_list_len * 100)
         # regularization using dropout
         outs = F.dropout(outs, self.drop_prob)
-        # outs (batch_size, hidden_size * sent_char_len)
         outs = F.linear(
-            outs, torch.randn(self.hidden_size * embed_size[1],
-                              self.filter_num))
-        # (batch_size, sent_len, hidden_size)
-        return outs.view(embed_size[0], embed_size[1], -1)
+            outs,
+            nn.Parameter(
+                nn.init.xavier_uniform_(
+                    torch.empty(self.hidden_size, outs.size(
+                        2)))).cuda())  # (batch_size, sent_len, hidden_size)
+
+        return outs

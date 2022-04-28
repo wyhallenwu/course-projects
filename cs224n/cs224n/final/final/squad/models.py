@@ -33,16 +33,14 @@ class BiDAF(nn.Module):
     def __init__(self, word_vectors, char_vectors, hidden_size, drop_prob=0.):
         super(BiDAF, self).__init__()
         self.emb = layers.Embedding(word_vectors=word_vectors,
-                                    hidden_size=hidden_size / 2,
+                                    hidden_size=int(hidden_size / 2),
                                     drop_prob=drop_prob)
 
         # ===============my adding=====================
         # filter shape used in BiDaf with num_filters=100, kernel_size=5
-        self.filter_num = 5
         self.char_emb = layers.CharacterEmbeddingLayer(
-            hidden_size=hidden_size / 2,
+            hidden_size=int(hidden_size / 2),
             char_vectors=char_vectors,
-            filter_num=self.filter_num,
             drop_prob=drop_prob)
         # =============================================
 
@@ -76,15 +74,17 @@ class BiDAF(nn.Module):
             qc_idxs)  # (batch_size, qc_len, hidden_size / 2)
 
         # concatenate word_embedding with char_embedding
-        c_emb = torch.cat((c_emb, cc_emb),
-                          dim=2)  # (batch_size, c_len, hidden_size)
-        q_emb = torch.cat((q_emb, qc_emb),
-                          dim=2)  # (batch_size, q_len, hidden_size)
+        c_cat_emb = torch.cat((c_emb, cc_emb),
+                              dim=2)  # (batch_size, c_len, hidden_size)
+        q_cat_emb = torch.cat((q_emb, qc_emb),
+                              dim=2)  # (batch_size, q_len, hidden_size)
 
         # ==========================================================
 
-        c_enc = self.enc(c_emb, c_len)  # (batch_size, c_len, 2 * hidden_size)
-        q_enc = self.enc(q_emb, q_len)  # (batch_size, q_len, 2 * hidden_size)
+        c_enc = self.enc(c_cat_emb,
+                         c_len)  # (batch_size, c_len, 2 * hidden_size)
+        q_enc = self.enc(q_cat_emb,
+                         q_len)  # (batch_size, q_len, 2 * hidden_size)
 
         att = self.att(c_enc, q_enc, c_mask,
                        q_mask)  # (batch_size, c_len, 8 * hidden_size)

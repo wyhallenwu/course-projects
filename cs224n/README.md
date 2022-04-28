@@ -12,8 +12,12 @@ nlp tasks have some difference between Chinese and English. For instance, Chines
 - [x] dependency parsing(*)
 - [x] machine translation(*)
 - [x] GPT-3 pre-trained test(*)
-- [x] final project(Question answering BiDaf)
+- [x] final project(Question answering)
+  - [x] train the baseline
+  - [x] add character-level embedding to baseline
+  - [ ] implement a new model(based on a paper)
+  - [ ] write a short report
 ***
-- [x] chinese text segmentation--mmseg algorithm
+- [x] chinese text segmentation--mmseg algorithm and jieba's method
 - [x] a glance at some toolkits(ltp, nltk, jieba)
 - [x] using word2vec to acheive Chinese Word Sense Disambiguation
