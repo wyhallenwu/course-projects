@@ -11,6 +11,8 @@ import torch.nn.functional as F
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from util import masked_softmax
 
+import numpy as np
+
 
 class Embedding(nn.Module):
     """Embedding layer used by BiDAF, without the character-level component.
@@ -298,3 +300,33 @@ class CharacterEmbeddingLayer(nn.Module):
                         2)))).cuda())  # (batch_size, sent_len, hidden_size)
 
         return outs
+
+
+# currently a idea to test (TODO: experiment)
+# maybe apply after contextual embedding layer
+
+class QueryMask(nn.Module):
+    def __init__(self, mask_prob):
+        super(QueryMask, self).__init__()
+        self.mask_prob = mask_prob
+
+
+    def mask(self, input):
+        # input (batch_size, sent_len, hidden_size)
+        prob = np.random.uniform(0, 1)
+
+        if prob < self.mask_prob:
+            input_size = input.size()
+            qmask_index = np.random.choice(input_size[1], int(self.mask_prob * input_size[1]), False)
+            # input (batch_size, hidden_size, after_masked)
+            masked_result = input[:, mask_index, :].permute([0, 2 ,1])
+
+            output = F.linear(masked_result, nn.Parameter(nn.init.xavier_uniform_(torch.empty((input_size[1], masked_result.size(2))).cuda()) 
+            # output (batch_size, after_masked, hidden_size)
+            output = F.tanh(output.permute([0, 2, 1]))
+            # output (batch_size, sent_len, hidden_size)
+            return output
+        return input
+            
+    def forward(self, input):
+        return self.mask(input)

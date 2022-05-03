@@ -34,4 +34,7 @@ CM layer: According to BiDaf original paper, it implement CM following paper `CN
 3. Related hyperparameters settings are different, I use default settings of the final project. 
 
 ### TODO
-a paper. I may choose transformer related.
+a paper. I may choose transformer related.  
+- [  ] adding masks to query encoder   
+My idea:  
+> there are papers using mask when encoding context and query. I guess may be we can only encode query with a randomness. It is based on a assumption that there already exsits explicit answer but our questions may be ambiguous. This usually make it difficult for search engine to retrieve the answer we want.

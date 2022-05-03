@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -71,3 +72,14 @@ print(z.shape)
 # o = [z, q]
 # print(z.shape)
 # print(torch.cat(o, dim=2).shape)
+
+print("test remove dim")
+x = torch.ones((10, 10, 10))
+r = np.random.choice(10, 7, False)
+x = x[:, r, :]
+print(x.shape)
+x = x.permute([0, 2, 1])
+x = F.linear(x, torch.ones(20, 7))
+
+print(x.shape)
+print(r)
