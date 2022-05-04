@@ -22,6 +22,10 @@ Unordered:
 
 > map's key can be used for comparision or not.   
 
+## operator[]
+vector and set can access by using [], but never use.  
+use at() instead
+
 ## Interators
 > how to access containers  
 > idea: iteration has an order over elements  
@@ -31,3 +35,5 @@ std::set::iterator iter = s.begin()
 \*iter  
 iter!= s.end()  
 auto second_iter = iter  
+
+**for-each can use reference but iterator is a copy of a kinf of pointer**  

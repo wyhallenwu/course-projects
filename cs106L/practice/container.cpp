@@ -45,5 +45,40 @@ int main(){
     }
     cout << endl;
 
+    cout << "testing vector iter and &iter" << endl;
+    for(auto iter = vec1.begin(); iter!= vec1.end(); ++iter){
+        cout << *iter << endl;
+    }
+    for(auto iter=vec1.begin(); iter!= vec1.end(); ++iter){
+        cout << &iter << endl;
+    }
+    for(auto &iter : vec1){
+        cout << iter << endl;
+        cout << &iter << endl;
+    }
+
+    // cout << vec1.at(10);
+    // cout << vec1[10]; never use
+
+    // testing set
+    cout << "testing set " << endl;
+    for(auto iter=s.begin(); iter!=s.end(); ++iter){
+        cout << *iter << endl;
+        cout << &iter << endl;
+    }
+    for(auto iter : s){
+        cout << iter << endl;
+        cout << &iter << endl;
+    }
+    for(auto& iter : s){
+        cout << iter << endl;
+        cout << &iter << endl;
+    }
+
+    auto iter = s.find(3);
+    cout << *iter << endl;
+
+    cout << *s.lower_bound(3) << endl;
+
     return 0;
 }
