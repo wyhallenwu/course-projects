@@ -37,3 +37,5 @@ iter!= s.end()
 auto second_iter = iter  
 
 **for-each can use reference but iterator is a copy of a kinf of pointer**  
+std::map can use auto&[first, second]  
+
