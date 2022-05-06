@@ -6,6 +6,7 @@
 using std::cout;
 using std::cin;
 using std::string;
+using std::endl;
 
 
 int main(){
@@ -36,5 +37,24 @@ int main(){
 		count++;
 	}
 	ifs.close();
-	return 0;
+
+
+    // write to file
+    std::ofstream outfile("out.txt");
+    outfile << "test ofstream" << std::endl;
+    
+    //test istream
+    cout << "please cin something" << endl;
+    int n;
+    std::string s;
+    cin >> n;
+    cout << n << endl;
+    cin >> s;
+    cout << s << endl;
+
+    // ostringstream/ istringstream
+    std::ostringstream ost;
+    ost << std::string("wuyuheng") << " yuhengwu" <<  3.15 << endl;
+    cout << ost.str() << endl;
+    return 0;
 }
