@@ -89,5 +89,10 @@ int main() {
     cout << iter.first << iter.second << endl;
   }
 
+  std::vector<int> v{3};
+  for (auto &iter : v) {
+    cout << iter << endl;
+  }
+
   return 0;
 }
