@@ -251,6 +251,7 @@ class CharacterEmbeddingLayer(nn.Module):
         # char_embedding
         self.char_embed = nn.Embedding.from_pretrained(char_vectors)
         # char_vector shape(1376, 64)
+        self.hwy = HighwayEncoder(2, hidden_size=hidden_size)
 
     def single_conv(self, char_idxs, window_size):
         # embed (batch_size, sent_len, sub_char_len, embedding_size: 64)
@@ -299,17 +300,21 @@ class CharacterEmbeddingLayer(nn.Module):
                     torch.empty(self.hidden_size, outs.size(
                         2)))).cuda())  # (batch_size, sent_len, hidden_size)
 
+        # testing adding highwayEncoder
+        # different from original embedding, adding highway project
+        outs = self.hwy(outs)
         return outs
 
 
-# currently a idea to test (TODO: experiment)
+# currently a idea to test (tesing result is bad, this layer has been removed)
 # maybe apply after contextual embedding layer
 
+
 class QueryMask(nn.Module):
+
     def __init__(self, mask_prob):
         super(QueryMask, self).__init__()
         self.mask_prob = mask_prob
-
 
     def mask(self, input):
         # input (batch_size, sent_len, hidden_size)
@@ -317,16 +322,24 @@ class QueryMask(nn.Module):
 
         if prob < self.mask_prob:
             input_size = input.size()
-            qmask_index = np.random.choice(input_size[1], int(self.mask_prob * input_size[1]), False)
+            qmask_index = np.random.choice(input_size[1],
+                                           int(self.mask_prob * input_size[1]),
+                                           False)
             # input (batch_size, hidden_size, after_masked)
-            masked_result = input[:, mask_index, :].permute([0, 2 ,1])
+            masked_result = input[:, qmask_index, :].permute([0, 2, 1])
 
-            output = F.linear(masked_result, nn.Parameter(nn.init.xavier_uniform_(torch.empty((input_size[1], masked_result.size(2))).cuda()) 
+            output = F.linear(
+                masked_result,
+                nn.Parameter(
+                    nn.init.xavier_uniform_(
+                        torch.empty(
+                            (input_size[1], masked_result.size(2))))).cuda())
             # output (batch_size, after_masked, hidden_size)
+            # TODO(test leakyrelu)
             output = F.tanh(output.permute([0, 2, 1]))
             # output (batch_size, sent_len, hidden_size)
             return output
         return input
-            
+
     def forward(self, input):
         return self.mask(input)

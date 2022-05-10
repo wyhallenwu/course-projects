@@ -43,8 +43,8 @@ class BiDAF(nn.Module):
             char_vectors=char_vectors,
             drop_prob=drop_prob)
 
-        # mask layer
-        self.mask_layer = layers.QueryMask(mask_prob=0.15)
+        # mask layer(result is bad, so this layer has been moved)
+        # self.mask_layer = layers.QueryMask(mask_prob=0.85)
         # =============================================
 
         self.enc = layers.RNNEncoder(input_size=hidden_size,
@@ -88,12 +88,12 @@ class BiDAF(nn.Module):
                          c_len)  # (batch_size, c_len, 2 * hidden_size)
         q_enc = self.enc(q_cat_emb,
                          q_len)  # (batch_size, q_len, 2 * hidden_size)
-        # testing mask====================
-        q_after_mask = self.mask_layer(q_enc)
+        # testing mask(result is bad, so move this part)====================
+        # q_after_mask = self.mask_layer(q_enc)
 
         # ================================
 
-        att = self.att(c_enc, q_after_mask, c_mask,
+        att = self.att(c_enc, q_enc, c_mask,
                        q_mask)  # (batch_size, c_len, 8 * hidden_size)
 
         mod = self.mod(att, c_len)  # (batch_size, c_len, 2 * hidden_size)
