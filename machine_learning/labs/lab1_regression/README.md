@@ -10,3 +10,9 @@ there are some features(such as states) may not help in this project. A task of 
 ## structure
 the given code is organised in a single file which is not a good code pattern. I reorganise the code by handwriting. It is helpful for beginner to go through the code and understand the pipeline.
 
+## train
+```bash
+sudo python3 train.py
+```
+
+> sudo is optional because in utility.trainer needs make a directory.
