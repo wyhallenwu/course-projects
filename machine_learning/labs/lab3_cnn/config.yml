@@ -1,0 +1,14 @@
+batch_size: 128
+dataset_dir: "./dataset/food11"
+train_dir: "./dataset/food11/training"
+test_dir: "./dataset/food11/test"
+valid_dir: "./dataset/food11/validation"
+epoch: 20
+early_stop: 300
+learning_rate: 0.0003
+weight_decay: 0.00001
+log_file: "./log.txt"
+model_path: "./pretrained/"
+mixup: True
+alpha: 0.5
+cross_validation_splits: 5

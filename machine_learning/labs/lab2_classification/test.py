@@ -1,10 +1,5 @@
-import torch
+import yaml
 
-n = 5
-x = torch.tensor([[1, 2, 3, 4], [1, 2, 3, 4]])
-y = torch.tensor([5, 6, 7, 8])
-x[0, :] = y
-print(x, x.shape)
-x = x.repeat(1, n)
-print(x, x.shape)
-print(x.view(2, n, -1))
+with open("./config.yaml", "r") as stream:
+    data_loaded = yaml.safe_load(stream)
+    print(data_loaded)

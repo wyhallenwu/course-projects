@@ -1,0 +1,4 @@
+runs/
+dataset/
+trained_model/
+__pycache__/

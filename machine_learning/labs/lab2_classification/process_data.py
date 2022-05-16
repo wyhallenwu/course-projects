@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import random
 from tqdm import tqdm
+import yaml
 
 
 def load_features(file):
@@ -109,6 +110,12 @@ def preprocess_data(
         return X
 
 
+def read_config(file="./config.yaml"):
+    with open(file, "r") as f:
+        config = yaml.safe_load(f)
+        return config
+
+
 if __name__ == "__main__":
-    x = load_features("./dataset/libriphone/libriphone/feat/train/19-227-0070.pt")
-    print(x.shape)
+    config = read_config()
+    print(config["seed"])
