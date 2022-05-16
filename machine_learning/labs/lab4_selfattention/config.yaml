@@ -1,0 +1,11 @@
+meta_data: "./dataset/Dataset/metadata.json"
+speaker2id_mapping: "./dataset/Dataset/mapping.json"
+data_dir: "./dataset/Dataset"
+batch_size: 64
+d_model: 200
+dropout: 0.1
+warmup_steps: 1000
+epoch: 50
+log_file: "log.txt"
+model_path: "./trained/"
+split_ratio: 0.8
