@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim
-from util import LibriDataset, same_seed
+from util import LibriDataset, same_seed, read_config
 import process_data
 import gc
 from torch.utils.data import DataLoader
@@ -10,8 +10,9 @@ from tqdm import tqdm
 import numpy as np
 
 
-config = process_data.read_config("./config.yaml")
+config = read_config("./config.yaml")
 # data prarameters
+
 concat_nframes = config[
     "concat_nframes"
 ]  # the number of frames to concat with, n must be odd (total 2k+1 = n frames)

@@ -108,14 +108,3 @@ def preprocess_data(
         return X, y
     else:
         return X
-
-
-def read_config(file="./config.yaml"):
-    with open(file, "r") as f:
-        config = yaml.safe_load(f)
-        return config
-
-
-if __name__ == "__main__":
-    config = read_config()
-    print(config["seed"])

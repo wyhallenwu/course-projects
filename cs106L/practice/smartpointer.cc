@@ -43,13 +43,18 @@ class Node {
 };
 
 int main() {
-  Node n{"wuyuheng"};
-  n.push_back(1);
-  n.push_back(2);
-  cout << n;
-  cout << n.compute() << endl;
-  Node n1{n};
-  cout << n1;
-  cout << n + n1;
+  std::unique_ptr<Node> n{std::make_unique<Node>("wuyuheng")};
+  n->push_back(1);
+  (*n).push_back(2);
+  cout << *n << endl;
+  cout << n.get() << endl;
+  std::unique_ptr<Node> s = std::move(n);
+  cout << *s << endl;
+  cout << s.get() << endl;
+  cout << "weak_ptr" << endl;
+  auto s1 = std::make_shared<Node>("yuhengwu");
+  std::weak_ptr<Node> w = s1;
+  auto w1 = w.lock();
+  cout << *w1 << endl;
   return 0;
 }

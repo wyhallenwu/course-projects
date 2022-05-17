@@ -1,5 +1,6 @@
-import yaml
+import torch
+import torch.functional as F
 
-with open("./config.yaml", "r") as stream:
-    data_loaded = yaml.safe_load(stream)
-    print(data_loaded)
+x = torch.rand(5, 10)
+x = torch.softmax(x, dim=0)
+print(x)

@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 import numpy as np
+import yaml
 
 
 class LibriDataset(Dataset):
@@ -19,6 +20,12 @@ class LibriDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
+
+
+def read_config(file="./config.yaml"):
+    with open(file, "r") as f:
+        config = yaml.safe_load(f)
+        return config
 
 
 def same_seed(seed):
