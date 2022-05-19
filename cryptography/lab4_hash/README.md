@@ -14,3 +14,10 @@ then test on another video
 firstly, split the video into chunks with 1kB. Storing each chunk in a list while reading.  
 After that, using reverse() so that we can hash from end to front.   
 Finally, hashing each chunk and then append to next chunk until the last chunk. Hashing the last chunk then get result.
+
+## test
+requirements: pycrypto  
+
+```bash
+python3 main.py
+```
