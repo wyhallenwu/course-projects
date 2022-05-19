@@ -15,8 +15,8 @@ nlp tasks have some difference between Chinese and English. For instance, Chines
 - [x] final project(Question answering)
   - [x] train the baseline
   - [x] add character-level embedding to baseline
-  - [ ] implement a new model(based on a paper)
-  - [ ] write a short report
+  - [x] implement a new model(based on a paper)
+  - [x] write a short report
 ***
 - [x] chinese text segmentation--mmseg algorithm and jieba's method
 - [x] a glance at some toolkits(ltp, nltk, jieba)

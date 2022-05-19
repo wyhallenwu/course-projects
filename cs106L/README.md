@@ -1,4 +1,4 @@
 ## README
-- [ ] wikiracer1
-- [ ] wikiracer2
-- [ ] hashmap
+- [x] wikiracer1
+- [x] wikiracer2
+- [x] hashmap
