@@ -4,7 +4,7 @@ cs144 computer networing labs.
 ## schedule
 - [x] lab0 bytesream
 - [x] lab1
-- [ ] lab2
+- [x] lab2
 - [ ] lab3
 - [ ] lab4
 - [ ] lab5
