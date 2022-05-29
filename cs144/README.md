@@ -2,11 +2,11 @@
 cs144 computer networing labs.
 
 ## schedule
-- [x] lab0 bytesream
-- [x] lab1
-- [x] lab2
-- [ ] lab3
-- [ ] lab4
-- [ ] lab5
-- [ ] lab6
-- [ ] lab7
+- [x] lab0 bytestream
+- [x] lab1 bytestream assembler
+- [x] lab2 tcp receiver
+- [ ] lab3 tcp sender
+- [ ] lab4 tcp connection
+- [ ] lab5 network interface
+- [ ] lab6 tcp router
+- [ ] lab7 together
