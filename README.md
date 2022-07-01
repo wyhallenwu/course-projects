@@ -1,2 +1,3 @@
 # course-projects
-This repository contains some course's projects since 2021-12. 
+This repository contains some course projects and notes since 2021-12. 
+
