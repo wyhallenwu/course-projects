@@ -50,7 +50,7 @@ def build_mlp(
     init_block = [nn.Linear(input_size, size), activation]
     block = [nn.Linear(size, size), activation]
     return nn.Sequential(
-        *init_block, *block * n_layers, nn.Linear(size, output_size),output_activation
+        *init_block, *(block * n_layers), nn.Linear(size, output_size),output_activation
     )
     # raise NotImplementedError
 
