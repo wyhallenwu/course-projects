@@ -1,5 +1,5 @@
 # README
-This is my implemention of the CS285 DRL homework.
+This is my implemention of the CS285 DRL homework and problems I met.
 
 ## 实现思路
 实现思路就是按照Dagger算法的四个步骤，需要注意的是training过程中一直使用的是collect policy
@@ -55,4 +55,4 @@ This is my implemention of the CS285 DRL homework.
 
 
 ## 收获
-replace buffer的代码实现
+学习replace buffer的代码实现
