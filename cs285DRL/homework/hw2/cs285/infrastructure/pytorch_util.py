@@ -80,4 +80,5 @@ def from_numpy(*args, **kwargs):
 
 
 def to_numpy(tensor):
+    print(type(tensor))
     return tensor.to('cpu').detach().numpy()

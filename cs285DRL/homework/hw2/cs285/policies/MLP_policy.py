@@ -146,7 +146,8 @@ class MLPPolicyPG(MLPPolicy):
             # 'zero_grad' first
 
         self.optimizer.zero_grad()
-        pred_actions = self.forward(observations)
+        # notice distributions.Categorical and distributions.MultivariateNormal
+        pred_actions = self.forward(observations).sample()
         loss = torch.sum(distributions.Normal.log_prob(pred_actions) * advantages)
         loss.backward()
         self.optimizer.step()
