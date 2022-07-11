@@ -5,7 +5,7 @@
 ## Goal of RL
 
 $$  
-\mathop{argmax}\limits_{\theta}J(\theta) \\
+\mathop{argmax}\limits_{\theta}J(\theta) \newline
 J(\theta) = E_{\tau\sim p_{\theta}(\tau)}[r(\tau)] \\
 \nabla_\theta{J(\theta)} = E_{\tau\sim p_\theta(\tau)}[(\sum_t^T \nabla_\theta log\pi_\theta(a_{it}|s_{it}))(\sum_t^T(r(s_t, a_t)))]
 $$
