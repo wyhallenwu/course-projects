@@ -100,6 +100,7 @@ class PGAgent(BaseAgent):
         # Estimate the advantage when nn_baseline is True,
         # by querying the neural network that you're using to learn the value function
         if self.nn_baseline:
+            # values_unnormalized [batch_trajs, ]
             values_unnormalized = self.actor.run_baseline_prediction(obs)
             ## ensure that the value predictions and q_values have the same dimensionality
             ## to prevent silent broadcasting errors
@@ -107,6 +108,7 @@ class PGAgent(BaseAgent):
             ## TODO: values were trained with standardized q_values, so ensure
                 ## that the predictions have the same mean and standard deviation as
                 ## the current batch of q_values
+                # TODO check
             values = values_unnormalized * np.std(q_values) + np.mean(q_values) # V^{pi}
 
             if self.gae_lambda is not None:
@@ -169,6 +171,7 @@ class PGAgent(BaseAgent):
 
     def _discounted_return(self, rewards):
         """
+            rewards from full trajectory with discounting 
             Helper function
 
             Input: list of rewards {r_0, r_1, ..., r_t', ... r_T} from a single rollout of length T
@@ -186,6 +189,7 @@ class PGAgent(BaseAgent):
 
     def _discounted_cumsum(self, rewards):
         """
+            reward to go with discounting
             Helper function which
             -takes a list of rewards {r_0, r_1, ..., r_t', ... r_T},
             -and returns a list where the entry in each index t' is sum_{t'=t}^T gamma^(t'-t) * r_{t'}
@@ -194,8 +198,7 @@ class PGAgent(BaseAgent):
         # TODO: create `list_of_discounted_returns`
         # HINT: it is possible to write a vectorized solution, but a solution
             # using a for loop is also fine
-        
-        coefficient = [self.gamma ** i for i in range(len(rewards))]
+
         list_of_discounted_cumsums = []
         for i in range(len(rewards)):
             coefficient = [self.gamma * t for t in range(len(rewards) - i)]

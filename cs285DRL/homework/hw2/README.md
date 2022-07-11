@@ -24,10 +24,9 @@ $$
 
 ## REINFORCE
 
-1. sample  ${\tau^i}$  from  $\pi_\theta(a_t | s_t)$ -> directly run the policy
+1. sample  $\tau^i$  from  $\pi_\theta(a_t | s_t)$ -> directly run the policy 
 
-2. $\nabla_\theta J(\theta) = \sum_i^N[\sum_t^T\nabla_\theta log\pi_\theta
-   (a_{i,t}| s_{i,t})r(\tau)]$
+2. $\nabla_{\theta} J(\theta) = \sum_i^N[\sum_t^T\nabla_{\theta} log\pi_\theta (a_{i,t}| s_{i,t})r(\tau)]$
 
 3. $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$
 
@@ -119,9 +118,9 @@ using cross entropy or squared error to compute $log \pi_\theta(a_{i,t} | s_{i,t
 # states -(N*T) x Ds tensor of states
 # q_values - (N*T) x 1 tensor of estimated state action values
 # Build the graph:
-logits = policy.predictions (states) # This should return (N*T) x Da tensor of action logits
-negative_likelihoods = tf.nn.softmax_cross_entropy_with_logits (labels=actions, logits=
-weighted_negative_likelihoods = tf.multiply negative_likelihoods , q_values
-loss = tf.reduce_mean weighted_negative_likelihoods
-gradients = loss.gradients (loss,
+logits = policy.predictions(states) # This should return (N*T) x Da tensor of action logits
+negative_likelihoods = tf.nn.softmax_cross_entropy_with_logits (labels=actions, logits=ligits)
+weighted_negative_likelihoods = tf.multiply(negative_likelihoods , q_values)
+loss = tf.reduce_mean(weighted_negative_likelihoods)
+gradients = loss.gradients (loss, gradients)
 ```
