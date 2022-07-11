@@ -6,12 +6,8 @@
 
 $$  
 \mathop{argmax}\limits_{\theta}J(\theta)  \\
-
 J(\theta) = E_{\tau\sim p_{\theta}(\tau)}[r(\tau)] \\
-
-\nabla_\theta{J(\theta)} = E_{\tau\sim p_\theta(\tau)}[(\sum_t^T \nabla_\theta 
-
-log\pi_\theta(a_{it}|s_{it}))(\sum_t^T(r(s_t, a_t))] \\
+\nabla_\theta{J(\theta)} = E_{\tau\sim p_\theta(\tau)}[(\sum_t^T \nabla_\theta log\pi_\theta(a_{it}|s_{it}))(\sum_t^T(r(s_t, a_t)))] \\
 $$
 
 after Monte Carlo
@@ -25,7 +21,7 @@ $$
 
 1. sample  $\tau^i$  from  $\pi_\theta(a_t | s_t)$ -> directly run the policy 
 
-2. $\nabla_{\theta} J(\theta) = \sum_i^N[\sum_t^T\nabla_{\theta} log\pi_\theta (a_{i,t}| s_{i,t})r(\tau)]$
+2. $\nabla_{\theta} J(\theta) = \sum_{i}^N[\sum_{t}^T\nabla_{\theta} log\pi_\theta (a_{i,t}| s_{i,t})r(\tau)]$
 
 3. $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$
 
