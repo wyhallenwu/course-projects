@@ -5,7 +5,7 @@
 ## Goal of RL
 
 $$  
-\mathop{argmax}\limits_{\theta}J(\theta) \newline
+\mathop{argmax}\limits_{\theta}J(\theta) \\
 J(\theta) = E_{\tau\sim p_{\theta}(\tau)}[r(\tau)] \\
 \nabla_\theta{J(\theta)} = E_{\tau\sim p_\theta(\tau)}[(\sum_t^T \nabla_\theta log\pi_\theta(a_{it}|s_{it}))(\sum_t^T(r(s_t, a_t)))]
 $$
@@ -119,3 +119,60 @@ weighted_negative_likelihoods = tf.multiply(negative_likelihoods , q_values)
 loss = tf.reduce_mean(weighted_negative_likelihoods)
 gradients = loss.gradients (loss, gradients)
 ```
+
+
+# Actor-Critic
+
+## 从policy gradient到policy evaluation
+
+$$
+\nabla_\theta J(\theta) \approx \frac{1}{N}\sum_i^N\sum_t^T
+\nabla_\theta log\pi_\theta(a_{i,t} | s_{i,t})(Q(s_{i,t}, a_{i,t}) - V(s_{i,t}))
+$$
+
+理解Advantage function
+
+$$
+A(s_{i,t}, a_{i,t}) = Q(s_{i,t}, a_{i,t}) - V(s_{i,t})
+$$
+
+> 当前状态下采取动作a，比该状态下分别采取所有动作的期望的奖励值 高多少
+
+实际中如何得到 $A(s_{i,t}, a_{i,t})$
+
+$$
+Q(s_{t}, a_{t}) = r(s_t, a_t) + V(s_{t+1}) \\
+A(s_t, a_t) = r(s_t, a_t) + V(s_{t+1}) - V(s_t)
+$$
+
+这样我们只需要fit $V(s_t)$
+
+为了fit $V(s_t)$ ,采用monte carlo
+
+$$
+V(s_t) \approx \frac{1}{N}\sum_i^N\sum_{t'=t}^Tr(s_{t'}, a_{t'})
+$$
+
+如此我们得到整个training 过程
+
+> training data: $\{ (s_{i,t}; \sum_{t'=t}^T r(s_{i,t'}, a_{i, t'})\}$ 使用的是monte carlo target
+> 
+> prediction: $\hat{V_\phi^\pi(s_i)}$
+> 
+> ideal target : $r(s_{i,t}, a_{i,t}) + \hat{V_\phi^\pi(s_{i, t+1})}$
+
+## policy evaluation 到 Actor-critic
+
+> 1. sample $\{ s_i, a_i\}$ from $\pi_\theta(a|s)$
+> 
+> 2. update $\hat{V_\phi^\pi(s)}$ using target $r + \gamma \hat{V_\phi^\pi(s')}$
+> 
+> 3. evaluate $A(s_t, a_t) = r(s_t, a_t) + \gamma V(s_{t+1}) - V(s_t)$
+> 
+> 4. $\nabla_\theta J(\theta) \approx \sum_i \nabla_\theta log\pi_\theta(a_i|s_i)\hat{A^\pi(s_i, a_i)}$
+> 
+> 5. $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$
+> 
+> $y_{i,t} \approx r(s_{i,t}, a_{i,t}) + \gamma \hat{V_\phi^\pi(s_{i, t+1})}$
+> 
+> $\sum_i \nabla_\theta log\pi_\theta(a_i | s_i)$ 使用monte carlo近似 softmax_with_cross_entropy(actions, logits)
