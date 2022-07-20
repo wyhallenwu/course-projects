@@ -10,6 +10,7 @@ from torch import distributions
 
 from cs285.infrastructure import pytorch_util as ptu
 from cs285.policies.base_policy import BasePolicy
+from cs285.infrastructure import utils
 
 
 class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
@@ -93,7 +94,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             observation = obs[None]
 
         # TODO return the action that the policy prescribes
-        return ptu.to_numpy(self.forward(ptu.from_numpy(observation)))
+        return ptu.to_numpy(self.forward(ptu.from_numpy(observation)).sample())
         # raise NotImplementedError
 
     # update/train this policy
@@ -147,8 +148,8 @@ class MLPPolicyPG(MLPPolicy):
 
         self.optimizer.zero_grad()
         # notice distributions.Categorical and distributions.MultivariateNormal
-        pred_actions = self.forward(observations).sample()
-        loss = torch.sum(distributions.Normal.log_prob(pred_actions) * advantages)
+        actions_prob = self.forward(observations)
+        loss = - torch.sum(actions_prob.log_prob(actions) * advantages)
         loss.backward()
         self.optimizer.step()
 
@@ -164,9 +165,9 @@ class MLPPolicyPG(MLPPolicy):
 
             
             self.baseline_optimizer.zero_grad()
-            standardized_qvalues = (q_values - np.mean(q_values)) / np.std(q_values)
-            baseline_pred = self.run_baseline_prediction(ptu.to_numpy(observations))
-            baseline_loss = self.baseline_loss(baseline_pred, standardized_qvalues)
+            standardized_qvalues = utils.normalize(q_values, np.mean(q_values), np.std(q_values))
+            baseline_pred = self.run_baseline_prediction(observations)
+            baseline_loss = self.baseline_loss(baseline_pred.squeeze(), ptu.from_numpy(standardized_qvalues))
             baseline_loss.backward()
             self.baseline_optimizer.step()
 

@@ -88,7 +88,7 @@ class PGAgent(BaseAgent):
         else:
             for traj in rewards_list:
                 q_values.append(self._discounted_cumsum(traj))
-        q_values = np.array(q_values)
+        q_values = np.concatenate(q_values)
         return q_values
 
     def estimate_advantage(self, obs, rews_list, q_values, terminals):
@@ -109,7 +109,7 @@ class PGAgent(BaseAgent):
                 ## that the predictions have the same mean and standard deviation as
                 ## the current batch of q_values
             # values = values_unnormalized * np.std(q_values) + np.mean(q_values) # V^{pi}
-            values = normalize(values_unnormalized, np.mean(q_values), np.std(q_values))
+            values = values_unnormalized * np.std(q_values) + np.mean(q_values)
 
             if self.gae_lambda is not None:
                 ## append a dummy T+1 value for simpler recursive calculation
@@ -131,12 +131,12 @@ class PGAgent(BaseAgent):
                         ## 0 otherwise.
                     ## HINT 2: self.gae_lambda is the lambda value in the
                         ## GAE formula
-                    
 
-                    # delta_t = r(s_t, a_t) + gamma * value[S_{t+1}] - value[S_t]
-                    delta_t = rews[i] + self.gamma * values[i + 1] - values[i]    
-
-                    advantages[i] = delta_t + self.gamma * self.gae_lambda * advantages[i + 1]
+                    if terminals[i] == 1:
+                        advantages[i] = rews[i] - values[i]
+                    else:
+                        advantages[i] = rews[i] + self.gamma * values[i+1] - values[i]
+                        advantages[i] += self.gamma * self.gae_lambda * advantages[i+1]
 
                 # remove dummy advantage
                 advantages = advantages[:-1]
@@ -153,7 +153,8 @@ class PGAgent(BaseAgent):
         if self.standardize_advantages:
             ## TODO: standardize the advantages to have a mean of zero
             ## and a standard deviation of one
-            advantages = (advantages - np.mean(advantages)) / np.std(advantages)
+            # advantages = (advantages - np.mean(advantages)) / np.std(advantages)
+            advantages = normalize(advantages, np.mean(advantages), np.std(advantages))
 
         return advantages
 
