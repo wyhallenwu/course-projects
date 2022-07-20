@@ -3,6 +3,7 @@ import numpy as np
 from .base_agent import BaseAgent
 from cs285.policies.MLP_policy import MLPPolicyPG
 from cs285.infrastructure.replay_buffer import ReplayBuffer
+from cs285.infrastructure.utils import normalize
 
 
 class PGAgent(BaseAgent):
@@ -87,7 +88,6 @@ class PGAgent(BaseAgent):
         else:
             for traj in rewards_list:
                 q_values.append(self._discounted_cumsum(traj))
-
         q_values = np.array(q_values)
         return q_values
 
@@ -108,8 +108,8 @@ class PGAgent(BaseAgent):
             ## TODO: values were trained with standardized q_values, so ensure
                 ## that the predictions have the same mean and standard deviation as
                 ## the current batch of q_values
-                # TODO check
-            values = values_unnormalized * np.std(q_values) + np.mean(q_values) # V^{pi}
+            # values = values_unnormalized * np.std(q_values) + np.mean(q_values) # V^{pi}
+            values = normalize(values_unnormalized, np.mean(q_values), np.std(q_values))
 
             if self.gae_lambda is not None:
                 ## append a dummy T+1 value for simpler recursive calculation
@@ -131,6 +131,7 @@ class PGAgent(BaseAgent):
                         ## 0 otherwise.
                     ## HINT 2: self.gae_lambda is the lambda value in the
                         ## GAE formula
+                    
 
                     # delta_t = r(s_t, a_t) + gamma * value[S_{t+1}] - value[S_t]
                     delta_t = rews[i] + self.gamma * values[i + 1] - values[i]    
@@ -200,9 +201,10 @@ class PGAgent(BaseAgent):
             # using a for loop is also fine
 
         list_of_discounted_cumsums = []
+        l = len(rewards)
+        coefficient = [self.gamma ** i for i in range(len(rewards))]
         for i in range(len(rewards)):
-            coefficient = [self.gamma * t for t in range(len(rewards) - i)]
-            list_of_discounted_cumsums.append(np.sum(coefficient * rewards[i:]))
+            list_of_discounted_cumsums.append(np.sum(coefficient[:l-i] * rewards[i:]))
         
         list_of_discounted_cumsums = np.array(list_of_discounted_cumsums)
         return list_of_discounted_cumsums
