@@ -38,6 +38,12 @@ class PGAgent(BaseAgent):
         """
             Training a PG agent refers to updating its actor using the given observations/actions
             and the calculated qvals/advantages that come from the seen rewards.
+
+            :param observations: [n_obs = expand batch_trajs, obs_space]
+            :param actions: [n_acs = expand batch_trajs, action_space]
+            :param rewards_list: [batch_traj, reward_list]  len(expand rewards_list) = n_obs
+            :param next_observations: [n_obs = expand batch_trajs, obs_space]
+            :param terminals: [n_terminals = expand batch_trajs, ]
         """
 
         # TODO: update the PG actor/policy using the given batch of data, and
@@ -48,7 +54,13 @@ class PGAgent(BaseAgent):
             # and obtain a train_log
 
         # step 1: compute q_values and advantages 
-        q_values = self.calculate_q_vals(rewards_list)     
+        q_values = self.calculate_q_vals(rewards_list)
+        # print("obs:  ", observations.shape)
+        # print("ac:  ", actions.shape)
+        # print("rewardslist: ", len(rewards_list), " ; ", len(rewards_list[0]), " ; ", len(rewards_list[1]))
+        # print(np.concatenate(rewards_list).shape)
+        # print("qvalues:  ", q_values.shape)
+        # print("terminals: ", terminals.shape)
         advantages = self.estimate_advantage(observations, rewards_list, q_values, terminals)
 
         # run policy to gain predictions
@@ -88,6 +100,7 @@ class PGAgent(BaseAgent):
         else:
             for traj in rewards_list:
                 q_values.append(self._discounted_cumsum(traj))
+        # print("qvalues:  ", len(q_values))
         q_values = np.concatenate(q_values)
         return q_values
 
@@ -116,8 +129,9 @@ class PGAgent(BaseAgent):
                 values = np.append(values, [0])
 
                 ## combine rews_list into a single array
-                rews = np.concatenate(rews_list)
 
+                rews = np.concatenate(rews_list)
+                
                 ## create empty numpy array to populate with GAE advantage
                 ## estimates, with dummy T+1 value for simpler recursive calculation
                 batch_size = obs.shape[0]

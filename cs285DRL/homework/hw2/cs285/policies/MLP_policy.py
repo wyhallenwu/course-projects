@@ -148,8 +148,8 @@ class MLPPolicyPG(MLPPolicy):
 
         self.optimizer.zero_grad()
         # notice distributions.Categorical and distributions.MultivariateNormal
-        actions_prob = self.forward(observations)
-        loss = - torch.sum(actions_prob.log_prob(actions) * advantages)
+        actions_prob_distribution = self.forward(observations)
+        loss = - torch.sum(actions_prob_distribution.log_prob(actions) * advantages)
         loss.backward()
         self.optimizer.step()
 
