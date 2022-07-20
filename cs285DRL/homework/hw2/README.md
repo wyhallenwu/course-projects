@@ -161,7 +161,7 @@ $$
 > 
 > ideal target : $r(s_{i,t}, a_{i,t}) + \hat{V_\phi^\pi(s_{i, t+1})}$
 
-## policy evaluation 到 Actor-critic
+## policy evaluation 到 online Actor-critic
 
 > 1. sample $\{ s_i, a_i\}$ from $\pi_\theta(a|s)$
 > 
@@ -173,6 +173,46 @@ $$
 > 
 > 5. $\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$
 > 
-> $y_{i,t} \approx r(s_{i,t}, a_{i,t}) + \gamma \hat{V_\phi^\pi(s_{i, t+1})}$
+> $y_{i,t} \approx r(s_{i,t}, a_{i,t}) + \gamma \hat{V_\phi^\pi(s_{i, t+1})}$ 当$T\rightarrow \infty$时, 使用$V_\phi^\pi$去估计Q (Temporal Difference)
 > 
 > $\sum_i \nabla_\theta log\pi_\theta(a_i | s_i)$ 使用monte carlo近似 softmax_with_cross_entropy(actions, logits)
+
+## make Actor-Critic practical
+**trick 1:** shared network design   
+![shared_network_design](readme_src/shared_network_design.png)
+
+**trick 2:** synchronized parallel actor-critic and asynchronized parallel actor-critic  
+![synchronized_actor_critic](readme_src/spac_apac.png)  
+
+**trick 3:** off-policy actor-critic   
+如果直接在vanilla AC上使用experience会存在以下问题：  
+(1)  
+![problem1](readme_src/off1.png)
+
+如果sample到的是old experience, the actions in these transitions were taken by older actors, when you use these older actors to get the action 
+and compute the target values. That's not will give you the right target value, it will give some other actor not your latest actor.  
+所以解决办法是使用Q    
+V我理解为given state s，then follow policy $\pi$ , Q理解为given state s and take action a then follow policy $\pi$   
+计算Q值的时候，使用的action由最新的policy重新generate出来  
+> 已经开始引入Q learning的方法
+
+(2)  
+![problem2](readme_src/off2.png)  
+$a_i$ is not the action the latest policy will take so using the policy to generate the new action of state $s_i$ and then compute   
+
+(3) other tricks  
+1. using Q instead of Advantage Function  
+2. using more fancier approximation of Q in step 3 
+3. using **reparameterization trick** in step 4
+
+
+## control variates
+> 综合actor-critic和vanilla policy gradient
+
+1. Q-prop
+2. **n-step**  
+   ![nstep](readme_src/nstep.png)  
+   在smaller variance处使用monte carlo，在higher variance处使用Critic降低variance
+3. **GAE(generalized advantage estimate)**
+   > 结合多个不同n的n-step(详见homework2实现)  
+   > 计算中可以迭代计算
