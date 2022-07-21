@@ -3,6 +3,7 @@ import itertools
 from torch import nn
 from torch.nn import functional as F
 from torch import optim
+from torch.autograd import Variable
 
 import numpy as np
 import torch
@@ -149,7 +150,7 @@ class MLPPolicyPG(MLPPolicy):
         self.optimizer.zero_grad()
         # notice distributions.Categorical and distributions.MultivariateNormal
         actions_prob_distribution = self.forward(observations)
-        loss = - torch.sum(actions_prob_distribution.log_prob(actions) * advantages)
+        loss = torch.neg(torch.mean(actions_prob_distribution.log_prob(actions) * advantages))
         loss.backward()
         self.optimizer.step()
 
@@ -165,9 +166,12 @@ class MLPPolicyPG(MLPPolicy):
 
             
             self.baseline_optimizer.zero_grad()
-            standardized_qvalues = utils.normalize(q_values, np.mean(q_values), np.std(q_values))
-            baseline_pred = self.run_baseline_prediction(observations)
-            baseline_loss = self.baseline_loss(baseline_pred.squeeze(), ptu.from_numpy(standardized_qvalues))
+            standardized_qvalues = ptu.from_numpy(utils.normalize(q_values, np.mean(q_values), np.std(q_values)))
+            baseline_pred = ptu.from_numpy(self.run_baseline_prediction(observations))
+            assert baseline_pred.shape == standardized_qvalues.shape
+            baseline_pred = Variable(baseline_pred, requires_grad = True)
+            standardized_qvalues = Variable(standardized_qvalues, requires_grad = True)
+            baseline_loss = self.baseline_loss(baseline_pred, standardized_qvalues)
             baseline_loss.backward()
             self.baseline_optimizer.step()
 
@@ -187,6 +191,9 @@ class MLPPolicyPG(MLPPolicy):
             Output: np.ndarray of size [N]
 
         """
+        # print("=" * 10)
+        # print("type is: " , observations.dtype)
+        # print("=" * 10)
         observations = ptu.from_numpy(observations)
         pred = self.baseline(observations)
         return ptu.to_numpy(pred.squeeze())

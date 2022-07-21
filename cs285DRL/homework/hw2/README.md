@@ -214,5 +214,70 @@ $a_i$ is not the action the latest policy will take so using the policy to gener
    ![nstep](readme_src/nstep.png)  
    在smaller variance处使用monte carlo，在higher variance处使用Critic降低variance
 3. **GAE(generalized advantage estimate)**
-   > 结合多个不同n的n-step(详见homework2实现)  
+   > 结合多个不同n的n-step(详见homework2实现)
    > 计算中可以迭代计算
+
+
+## result analysis
+### experiment 1(cartpole-v0):  
+```python
+python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 1000 \
+-dsa --exp_name q1_sb_no_rtg_dsa
+python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 1000 \
+-rtg -dsa --exp_name q1_sb_rtg_dsa
+python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 1000 \
+-rtg --exp_name q1_sb_rtg_na
+python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 5000 \
+-dsa --exp_name q1_lb_no_rtg_dsa
+python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 5000 \
+-rtg -dsa --exp_name q1_lb_rtg_dsa
+python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 5000 \
+-rtg --exp_name q1_lb_rtg_na
+```
+test differnet settings.  
+`python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 1000 -dsa --exp_name q1_sb_no_rtg_dsa`  
+![result_n100_b1000_dsa](readme_src/result_n100_b1000_dsa.png)
+
+`python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 1000 -rtg -dsa --exp_name q1_sb_rtg_dsa`  
+![result_n100_b1000_rtg_dsa](readme_src/result_n100_b1000_rtg_dsa.png)
+
+`python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 1000 -rtg --exp_name q1_sb_rtg_na`
+![result_n100_b1000_rtg](readme_src/result_n100_b1000_rtg.png)
+
+`python cs285/scripts/run_hw2.py --env_name CartPole-v0 -n 100 -b 5000 -rtg --exp_name q1_lb_rtg_na`  
+![result_n100_b5000_rtg](readme_src/result_n100_b5000_rtg.png)
+
+```
+Answer the following questions briey:  
+Which value estimator has better performance without advantage-standardization: the trajectory-centric one, or the one using reward-to-go?
+Did advantage standardization help?
+Did the batch size make an impact?
+```
+
+answer:  
+```
+q1: 结果图1，2：两个都是没有advantage-standardization的结果，2是使用reward-to-go, 可以看出来结果2在eval中的average return要高于1，结果2应该要更好，但是同时
+结果2在trianing中的loss大于1
+q2: 看结果图2，3：设置了advantage standardization之后结果更好
+q3: 看结果图3，4：batch_size 5000优于1000
+```
+
+### experiment2(InvertedPendulum-v2)
+```
+python cs285/scripts/run_hw2.py --env_name InvertedPendulum-v2 \
+--ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b <b*> -lr <r*> -rtg \
+--exp_name q2_b<b*>_r<r*>
+```
+> where your task is to find the smallest batch size b* and largest learning rate r* that gets to optimum
+> (maximum score of 1000) in less than 100 iterations. The policy performance may uctuate around 1000; 
+> this is fine. The precision of b* and r* need only be one significant digit.
+
+**result:**   
+`b 5000 lr 0.01`
+
+result of `b1000 lr 0.01`   
+![IP1](readme_src/IP_b1000_r0.01.png)
+
+result of `b 5000 lr 0.01`    
+![IP2](readme_src/IP_b5000_r0.01.png)
+
