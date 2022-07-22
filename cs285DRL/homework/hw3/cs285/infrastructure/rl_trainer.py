@@ -244,7 +244,7 @@ class RL_Trainer(object):
             # HINT: keep the agent's training log for debugging
             train_log = self.agent.train(ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch)
             all_logs.append(train_log)
-        return 
+        return all_logs
 
     ####################################
     ####################################

@@ -78,8 +78,7 @@ class DQNAgent(object):
 
         # TODO if taking this step resulted in done, reset the env (and the latest observation)
         if done:
-            self.env = self.env.reset()
-            self.last_obs = self.env
+            self.last_obs = self.env.reset()
 
     def sample(self, batch_size):
         if self.replay_buffer.can_sample(self.batch_size):
