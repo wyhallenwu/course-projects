@@ -76,7 +76,7 @@ def set_device(gpu_id):
 
 
 def from_numpy(*args, **kwargs):
-    return torch.Tensor(*args, **kwargs).float().to(device)
+    return torch.from_numpy(*args, **kwargs).float().to(device)
 
 
 def to_numpy(tensor):

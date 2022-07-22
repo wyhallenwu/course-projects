@@ -194,6 +194,8 @@ class MLPPolicyPG(MLPPolicy):
         # print("=" * 10)
         # print("type is: " , observations.dtype)
         # print("=" * 10)
+        if torch.is_tensor(observations):
+            observations = ptu.to_numpy(observations)
         observations = ptu.from_numpy(observations)
         pred = self.baseline(observations)
         return ptu.to_numpy(pred.squeeze())
