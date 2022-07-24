@@ -1,5 +1,6 @@
 """CS 61A Presents The Game of Hog."""
 
+from pexpect import runu
 from dice import six_sided, four_sided, make_test_dice
 from ucb import main, trace, interact
 
@@ -231,13 +232,21 @@ def announce_highest(who, last_score=0, running_high=0):
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
 
-    def say(score0, score1):
-        score = score0 if who else score1
-        # nonlocal running_high
-        if score - last_score > running_high:
-            running_high = score - last_score
-            print(running_high, "points(s)! That's the biggest gain yet for Player", who)
-        return announce_highest(who, score, running_high)
+    # def say(score0, score1):
+    #     score = score0 if who else score1
+    #     # nonlocal running_high
+    #     if score - last_score > running_high:
+    #         running_high = score - last_score
+    #         print(running_high, "points(s)! That's the biggest gain yet for Player", who)
+    #     return announce_highest(who, score, running_high)
+    # return say
+    def say(*scores):
+        assert len(scores) == 2
+        gain = scores[who] - last_score
+        if gain > running_high:
+            print(gain, "point(s)! That's the biggest gain yet for Player", who)
+            return announce_highest(who, scores[who], gain)
+        return announce_highest(who, scores[who], running_high)
     return say
     # END PROBLEM 7
 
